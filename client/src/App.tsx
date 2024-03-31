@@ -1,10 +1,9 @@
+import './App.css'
+import Layout from './layout/user/Layout'
+
 function App() {
 
-  return (
-    <>
-    <h1 className='text-blue-500'>hello welcome to my application</h1>
-    </>
-  )
+  return  <Layout />
 }
 
 export default App
