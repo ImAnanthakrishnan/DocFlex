@@ -1,14 +1,26 @@
-import React from "react";
+
 import heroImage01 from "../../assets/images/hero-img01.png";
 import heroImage02 from "../../assets/images/hero-img02.png";
 import heroImage03 from "../../assets/images/hero-img03.png";
 import icon01 from "../../assets/images/icon01.png";
 import icon02 from "../../assets/images/icon02.png";
 import icon03 from "../../assets/images/icon03.png";
-import { Link } from "react-router-dom";
+
+import { Link, Navigate, useLocation, } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa6";
+import {  useAppSelector } from "../../app/hooks";
+
 
 const Home = () => {
+
+  const location = useLocation();
+
+
+  const {currentUser} = useAppSelector(state => state.user);
+  if(currentUser && location.pathname === '/' ){
+    return <Navigate to="/home" />
+  }
+
   return (
     <>
       {/* ===== hero section ===== */}

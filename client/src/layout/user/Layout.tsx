@@ -1,4 +1,3 @@
-import React from 'react'
 import Header from '../../components/user/header/Header'
 import Routers from '../../routes/user/Router'
 import Footer from '../../components/user/footer/Footer'

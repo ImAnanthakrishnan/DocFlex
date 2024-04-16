@@ -7,6 +7,7 @@ import ApprovedDoctorListReducer from '../slices/user/doctorListSlice';
 import PhoneReducer from '../slices/phoneSlice';
 import UserListReducer from '../slices/admin/userListSlice';
 import SingleDoctorReducer from '../slices/doctorSlice';
+import AppointmentReducer from '../slices/doctor/appointmentSlice';
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -44,7 +45,8 @@ const rootReducer = combineReducers({
     approvedDoctorList : ApprovedDoctorListReducer,
     phone:PhoneReducer,
     userList: UserListReducer,
-    singleDoctor:SingleDoctorReducer
+    singleDoctor:SingleDoctorReducer,
+    appointment:AppointmentReducer
 });
 
 const store = configureStore({

@@ -39,8 +39,16 @@
 
     .form__input{
         @apply w-full px-4 py-3 border border-solid border-[#0066ff61] focus:outline-none
-        focuse:border-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor
+        focus:border-primaryColor text-[16px] leading-7 text-headingColor placeholder:text-textColor
         cursor-pointer rounded-md;
+    }
+
+    .glass{
+        @apply h-3/4 w-3/4;
+    }
+
+    .profile_img{
+        @apply w-40 cursor-pointer;
     }
 }
 

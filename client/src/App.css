@@ -52,3 +52,125 @@ body{
         display: block;
     }
 }
+
+.icon{
+    vertical-align:middle;
+    line-height:1px;
+    font-size:20px;
+}
+
+.icon_header{
+    vertical-align: middle;
+    line-height: 1px;
+    font-size: 26px;
+}
+
+.icon , .icon_header{
+    margin-right: 26px;
+}
+
+.grid-container{
+    display: grid;
+    grid-template-columns: 260px 1fr 1fr 1fr;
+    grid-template-rows:0.2fr 3fr;
+    grid-template-areas: 
+    "sidebar admin-header admin-header admin-header"
+    "sidebar main main main";
+    height: 100vh;
+  }
+
+  /*header*/
+.admin-header{
+    grid-area: admin-header;
+    height:60px;
+   
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 30px 0 30px;
+    box-shadow: 0 6px 7px -3px rgba(0,0,0,0.35);
+}
+.menu-icon{
+    display: none;
+
+}
+
+/*sidebar*/
+#sidebar{
+    grid-area: sidebar;
+    height: 100%;
+    background-color:rgb(255 255 255 );
+    overflow-y: auto;
+    transition: all 0.5s;
+    -webkit-transition: all 0.5s;
+   
+  }
+  
+  .sidebar-title{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 20px 0px 30px;
+      margin-bottom: 30px;
+  }
+  .sidebar-title>span{
+      display: none;
+  }
+  
+  .sidebar-brand{
+      margin-top: 15px;
+      font-size: 20px;
+      font-weight: 700;
+  }
+  
+  .sidebar-list{
+      padding: 0;
+      list-style-type:none;
+  }
+  
+  .sidebar-list-item{
+      padding: 20px 20px 20px 20px;
+      font-size: 18px;
+      color:rgb(107 114 128 )
+  }
+  
+  .sidebar-list-item:hover{
+      background-color: rgb(242 250 248 );
+      cursor: pointer;
+  }
+
+  .sidebar-list-item > a{
+    text-decoration: none;
+    color: #9e9ea4;
+}
+  
+  .sidebar-responsive{
+      display: inline !important;
+      position: absolute;
+      z-index: 12 !important
+  }
+   .sidebar-list a{
+      text-decoration: none;
+      color: #9799ab;
+  }
+
+  /*main*/
+.main-container{
+    grid-area:main;
+    overflow-y: auto;
+    padding: 20px 20px;
+}
+
+.glass{
+    background: rgba(255, 255, 255, 0.55);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px #4747470b;
+    backdrop-filter: blur(7.1px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    @apply border-4 border-gray-50 shrink-0 h-2/3 w-[20%] rounded-3xl py-20 px-7 min-w-max;
+}
+
+.profile_img{
+    @apply border-4 border-gray-100 w-[135px] rounded-full shadow-lg cursor-pointer;
+    @apply hover:border-gray-200;
+}
