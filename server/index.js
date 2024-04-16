@@ -1,16 +1,41 @@
 import express from 'express';
-const app = express();
+
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-dotenv.config();
+import passport from 'passport';
+import logger from 'morgan';
+
 import path,{dirname} from 'path';
 import { fileURLToPath } from 'url';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 
+
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+dotenv.config();
+
+const app = express();
+
+app.use(logger('dev'));
+
+const corsOption = {
+    origin:true
+}
+
+app.use(cors(corsOption));
+
+
+
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+app.use(cookieParser());
+
+app.use(express.static(path.join(__dirname,'public')));
+
 
 mongoose.connect(process.env.MONGO_URL, {
 })
@@ -21,17 +46,30 @@ mongoose.connect(process.env.MONGO_URL, {
     console.log('Error connecting to MongoDB:',err)
 });
 
-app.use(cors());
+/*const corsOptions = {
+    origin : true
+}*/
 
-app.use(express.static(path.join(__dirname,'public')));
 
-app.use(express.json());
-app.use(express.urlencoded({extended:true}));
-app.use(cookieParser());
+import authRoute from './routes/auth.js'
+import doctorRoute from './routes/doctors.js'
+import adminRoute from './routes/admin.js';
+import userRoute from './routes/user.js';
+import oAuthRoute from './routes/oAuth.js';
+import bookingRoute from './routes/booking.js';
+
+app.use('/api/v1/auth' , authRoute);
+app.use('/api/v1/doctors',doctorRoute);
+app.use('/api/v1/admin',adminRoute);
+app.use('/api/v1/user',userRoute);
+app.use('/auth',oAuthRoute);
+app.use('/api/v1/bookings' , bookingRoute);
+
 
 app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
+
 
 app.listen( PORT, () => console.log(`Server listening on port ${PORT}`));
