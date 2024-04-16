@@ -1,74 +1,60 @@
 import { useState } from "react";
 import signupImg from "../../assets/images/signup.gif";
 //import avatar from "../../assets/images/profile.png";
-import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ZodType, z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import uploadImageCloudinary from "../../utilis/uploadCloudinary";
 import googleImg from "../../assets/images/btn_google_signin_dark_pressed_web.png";
+import uploadImageCloudinary from "../../utilis/uploadCloudinary";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
 import { HashLoader } from "react-spinners";
-import { phoneSuccess } from "../../slices/phoneSlice";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppSelector } from "../../app/hooks";
 
-type User = {
+type Doctor = {
   name: string;
   email: string;
   password: any;
-  phone: number | string ;
-  photo: string ;
+  photo?: string;
   gender: string;
-  countryCode?: string;
 };
 
-const countries = [
-  { code: "+1", name: "USA" },
-  { code: "+91", name: "India" },
-];
-
 const Signup = () => {
+  const { currentDoctor } = useAppSelector((data) => data.doctor);
 
-  const {currentUser} = useAppSelector(state=>state.user);
+  const { currentUser } = useAppSelector((data) => data.user);
 
-  const {currentDoctor} = useAppSelector(state=>state.doctor);
+  const { currentAdmin } = useAppSelector((data) => data.admin);
 
-  const {currentAdmin} = useAppSelector(state=>state.admin);
-
-  const location = useLocation();
-
-  if(currentUser){
-    return <Navigate to='/home' />
+  if (currentDoctor) {
+    return <Navigate to="/doctor/home" />;
   }
 
-  if((currentDoctor && !location.pathname.startsWith('/doctor')) || (currentDoctor && !location.pathname.startsWith('/admin'))){
-      return <Navigate to='/doctor/home' />
+  if (currentUser && location.pathname.startsWith("/doctor")) {
+    return <Navigate to="/home" />;
   }
 
-  if((currentAdmin && !location.pathname.startsWith('/doctor')) || (currentAdmin && !location.pathname.startsWith('/admin'))){
-    return <Navigate to='/admin/home' />
+  if (currentAdmin && location.pathname.startsWith("/doctor")) {
+    return <Navigate to="/admin/home" />;
   }
 
   const [selectedFile, setSelectedFile] = useState<string | "">("");
   const [previewUrl, setPreviewUrl] = useState<string | "">("");
   const [loading, setLoading] = useState<Boolean>(false);
-  const [imgError,setImgError] = useState<Boolean>(false)
+  const [imgError, setImgError] = useState<Boolean>(false);
 
-  const [formData, setFormData] = useState<User>({
+  const [formData, setFormData] = useState<Doctor>({
     name: "",
     email: "",
     password: "",
-    phone: "",
-    countryCode: "",
     photo: selectedFile,
     gender: "",
   });
 
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -77,7 +63,6 @@ const Signup = () => {
       [e.target.name]: e.target.value,
     });
   };
- 
 
   const handleFileInputChange = async (
     e: React.ChangeEvent<HTMLInputElement>
@@ -96,70 +81,71 @@ const Signup = () => {
     }
   };
 
-  async function sendOtp() {
-    await axios.post(`${BASE_URL}/auth/send-otp`, formData);
-  }
-
-  const schema  = z.object({
-    name: z.string().min(2, { message: 'Name must be at least 2 characters long' }).max(30, { message: 'Name cannot exceed 30 characters' }),
-    email: z.string().email({ message: 'Invalid email format' }),
-    password: z.string().min(5, { message: 'Password must be at least 5 characters long' }).max(20, { message: 'Password cannot exceed 20 characters' }),
-    phone: z.string().length(10, { message: 'Phone number must be exactly 10 digits' }).regex(/^\d+$/, { message: 'Phone must contain only numbers' }),
+  const schema: ZodType<Doctor> = z.object({
+    name: z
+      .string()
+      .min(2, { message: "Name must be at least 2 characters long" })
+      .max(30, { message: "Name cannot exceed 30 characters" }),
+    email: z.string().email({ message: "Invalid email format" }),
+    password: z
+      .string()
+      .min(5, { message: "Password must be at least 5 characters long" })
+      .max(20, { message: "Password cannot exceed 20 characters" }),
     //photo: z.string().min(1,{ message: 'Please select you image' }),
-    gender: z.string().refine((value) => value === 'male' || value === 'female', {
-      message: 'Gender is required',
-    }),
-    countryCode: z.string(),
+    gender: z
+      .string()
+      .refine((value) => value === "male" || value === "female", {
+        message: "Gender is required",
+      }),
   });
-  
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<User>({ resolver: zodResolver(schema) });
+  } = useForm<Doctor>({ resolver: zodResolver(schema) });
 
-  const submitHandler = async (formData: User) => {
+  const submitHandlerr = async (formData: Doctor) => {
     setLoading(true);
-    
-    if(selectedFile === ''){
+    console.log(selectedFile);
+    if (selectedFile === "") {
       setLoading(false);
       return setImgError(true);
     }
 
     const postData = {
       formData: formData,
-      selectedFile: selectedFile
+      selectedFile: selectedFile,
+      doctor: true,
     };
-    console.log(postData)
-  
+    console.log(postData);
+
     try {
       // Make the registration request
-      const registrationResponse = await axios.post(`${BASE_URL}/auth/register`, postData);
-      const phone = formData.countryCode ? formData.countryCode + formData.phone : formData.phone;
-     dispatch(phoneSuccess(phone));
+      const registrationResponse = await axios.post(
+        `${BASE_URL}/auth/register`,
+        postData
+      );
+
       const { message } = registrationResponse.data;
       setLoading(false);
       toast.success(message);
-  
-      // After successful registration, send the OTP
-      await sendOtp();
-  
-      // Redirect to the OTP page
-      navigate("/otp");
-    } catch (error:any) {
-      const errorMessage = error.response?.data?.message || 'Something went wrong';
+
+      navigate("/doctor/login");
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || "Something went wrong";
       toast.error(errorMessage);
       setLoading(false);
     }
   };
 
-function navigateUrl(url:string){
-  window.location.href = url
-}
+  function navigateUrl(url:string){
+    window.location.href = url
+  }
 
   async function auth(){
-    const response = await fetch(`${BASE_URL}/auth`,
+    const response = await fetch(`${BASE_URL}/auth?user=${'doctor'}`,
       {method:'post'}
     );
     const data = await response.json();
@@ -185,10 +171,7 @@ function navigateUrl(url:string){
               Create an <span className="text-primaryColor">account</span>
             </h3>
 
-            <form noValidate
-              onSubmit={handleSubmit(submitHandler)
-              }
-            >
+            <form noValidate onSubmit={handleSubmit(submitHandlerr)}>
               <div className="mb-5">
                 <input
                   type="text"
@@ -198,10 +181,12 @@ function navigateUrl(url:string){
                   value={formData.name}
                   onChange={handleInputChange}
                   className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none
-              focus:border-b-primaryColor text-[22px] leading-7 text-headingColor
-              placeholder:text-textColor  cursor-pointer"
+            focus:border-b-primaryColor text-[22px] leading-7 text-headingColor
+            placeholder:text-textColor  cursor-pointer"
                 />
-                   {errors.name && <p className="text-red-300">{errors.name.message}</p>}
+                {errors.name && (
+                  <p className="text-red-300">{errors.name.message}</p>
+                )}
               </div>
 
               <div className="mb-5">
@@ -213,42 +198,12 @@ function navigateUrl(url:string){
                   value={formData.email}
                   onChange={handleInputChange}
                   className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none
-              focus:border-b-primaryColor text-[22px] leading-7 text-headingColor
-              placeholder:text-textColor  cursor-pointer"
-                />
-                 {errors.email && <p className="text-red-300">{errors.email.message}</p>}
-              </div>
-
-              <div className="mb-5">
-                <div className="flex items-center mb-2">
-                  <select
-                    {...register("countryCode")}
-                    name="countryCode"
-                    value={formData.countryCode}
-                    onChange={handleInputChange}
-                    className="mr-2 px-2 py-1 border border-solid border-[#0066ff61] focus:outline-none
-            focus:border-b-primaryColor text-[16px] leading-5 text-headingColor cursor-pointer"
-                  >
-                    {countries.map((country) => (
-                      <option key={country.code} value={country.code}>
-                        {country.name} ({country.code})
-                      </option>
-                    ))}
-                  </select>
-                  <input
-                    type="text"
-                    {...register("phone")}
-                    placeholder="Enter your phone number"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none
             focus:border-b-primaryColor text-[22px] leading-7 text-headingColor
-            placeholder:text-textColor cursor-pointer"
-                  />
-                
-                </div>
-                {errors.phone && <p className="text-red-300">{errors.phone.message}</p>}
+            placeholder:text-textColor  cursor-pointer"
+                />
+                {errors.email && (
+                  <p className="text-red-300">{errors.email.message}</p>
+                )}
               </div>
 
               <div className="mb-5">
@@ -260,14 +215,12 @@ function navigateUrl(url:string){
                   value={formData.password}
                   onChange={handleInputChange}
                   className="w-full pr-4 py-3 border-b border-solid border-[#0066ff61] focus:outline-none
-              focus:border-b-primaryColor text-[22px] leading-7 text-headingColor
-              placeholder:text-textColor  cursor-pointer"
+            focus:border-b-primaryColor text-[22px] leading-7 text-headingColor
+            placeholder:text-textColor  cursor-pointer"
                 />
                 {errors.password &&
                   typeof errors.password.message === "string" && (
-                    <p className="text-red-300">
-                      {errors.password.message}
-                    </p>
+                    <p className="text-red-300">{errors.password.message}</p>
                   )}
               </div>
 
@@ -289,7 +242,9 @@ function navigateUrl(url:string){
                     <option value="female">Female</option>
                   </select>
                 </label>
-                {errors.gender && <p className="text-red-300">{errors.gender.message}</p>}
+                {errors.gender && (
+                  <p className="text-red-300">{errors.gender.message}</p>
+                )}
               </div>
 
               <div className="mb-5 flex items-center gap-3">
@@ -313,19 +268,20 @@ function navigateUrl(url:string){
                     accept=".jpg, .png"
                     className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
                   />
-                  
+
                   <label
                     htmlFor="customFile"
                     className="absolute top-0 left-0 w-full h-full flex items-center px-[0.75rem] py-[0.375rem] text-[15px]
-                leading-6 overflow-hidden bg-[#0066ff46] text-headingColor font-semibold rounded-lg
-                truncate cursor-pointer"
+              leading-6 overflow-hidden bg-[#0066ff46] text-headingColor font-semibold rounded-lg
+              truncate cursor-pointer"
                   >
                     Upload Photo
                   </label>
                 </div>
-               
               </div>
-              {imgError && <p className="text-red-300">Please select your image</p>}
+              {imgError && (
+                <p className="text-red-300">Please select your image</p>
+              )}
               <div className="mt-7">
                 <button
                   disabled={loading && true}
@@ -337,21 +293,20 @@ function navigateUrl(url:string){
               </div>
               <p className="text-center text-headingColor mt-2">or</p>
               <div className="flex justify-center">
-            <button className="mt-3" type="button" onClick={() => auth()}>
-                  <img  src={googleImg} alt="google sign in" />
-            </button>
-            </div>
+                <button className="mt-3" type="button" onClick={() => auth()}>
+                  <img src={googleImg} alt="google sign in" />
+                </button>
+              </div>
               <p className="mt-5 text-textColor text-center">
                 Already have an account?{" "}
                 <Link
-                  to="/login"
+                  to="/doctor/login"
                   className="text-primaryColor font-medium ml-1"
                 >
                   Login
                 </Link>
               </p>
             </form>
-
           </div>
         </div>
       </div>
