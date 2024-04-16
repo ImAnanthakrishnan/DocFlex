@@ -35,10 +35,13 @@ const ApprovedDoctorListSlice = createSlice({
         fetchDoctorListFailed : (state,action:PayloadAction<string | undefined>) => {
             state.loading = false;
             state.error = action.payload
+        },
+        clear : (state) => {
+            state.approvedDoctorList = []
         }
     }
 })
 
-export const {fetchDoctorStart , fetchDoctorListSuccess , fetchDoctorListFailed} = ApprovedDoctorListSlice.actions;
+export const {fetchDoctorStart , fetchDoctorListSuccess , fetchDoctorListFailed , clear} = ApprovedDoctorListSlice.actions;
 
 export default ApprovedDoctorListSlice.reducer;

@@ -17,7 +17,7 @@ export type Doctor = {
     averageRating?:number;
     totalRating?:number;
     isApproved?:string;
-    appointments?:{}[]
+    appointments?:{}[];
 }
 
 type InitialState = {

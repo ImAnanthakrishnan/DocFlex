@@ -1,9 +1,11 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
+
 type User = {
     _id:number |string;
     name:string;
     email:string;
+    phone:string
     photo:string;
     gender:string;
 }
@@ -39,6 +41,11 @@ const UserSlice = createSlice({
             state.loading = false;
             state.error = action.payload
         },
+        updateSuccess:(state,action:PayloadAction<{data:User}>) =>{
+            state.currentUser = action.payload.data;
+            state.loading=false;
+            state.error = undefined;
+        },
         signOut : (state) => {
             state.currentUser = null;
             state.token = null;
@@ -48,7 +55,7 @@ const UserSlice = createSlice({
     }
 });
 
-export const {signInStart , signInSuccess , signInFailure ,signOut} = UserSlice.actions;
+export const {signInStart , signInSuccess , signInFailure,updateSuccess ,signOut} = UserSlice.actions;
 
 export default UserSlice.reducer;
 
