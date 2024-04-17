@@ -57,6 +57,7 @@ import adminRoute from './routes/admin.js';
 import userRoute from './routes/user.js';
 import oAuthRoute from './routes/oAuth.js';
 import bookingRoute from './routes/booking.js';
+import reviewRoute from './routes/review.js';
 
 app.use('/api/v1/auth' , authRoute);
 app.use('/api/v1/doctors',doctorRoute);
@@ -64,6 +65,7 @@ app.use('/api/v1/admin',adminRoute);
 app.use('/api/v1/user',userRoute);
 app.use('/auth',oAuthRoute);
 app.use('/api/v1/bookings' , bookingRoute);
+app.use('/api/v1/reviews',reviewRoute);
 
 
 app.use(notFound);

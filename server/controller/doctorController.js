@@ -105,7 +105,9 @@ export const getSingleDoctor = asyncHandler(async (req, res) => {
   let doctor = null;
 
   if (doctorId) {
-    doctor = await Doctor.findById({ _id: doctorId }).select("-password");
+    doctor = await Doctor.findById({ _id: doctorId })
+    .populate("reviews")
+    .select("-password");
 
     if (doctor) {
       return res.status(200).json({ success: true, data: doctor });
