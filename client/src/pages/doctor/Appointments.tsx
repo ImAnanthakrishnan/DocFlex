@@ -10,6 +10,13 @@ import {
 } from "../../slices/doctor/appointmentSlice";
 import { toast } from "react-toastify";
 import { AiTwotoneLeftCircle, AiTwotoneRightCircle } from "react-icons/ai";
+import { PiDotsThreeCircle } from "react-icons/pi";
+import FullScreenModal from "../../components/FullScreenModal";
+import AddPrescription from "../../components/doctor/AddPrescription";
+import ViewPrescriptions from "../../components/doctor/ViewPrescriptions";
+import { FcVideoCall } from "react-icons/fc";
+import JitsiMeet from "../../components/JitsiMeet";
+import { useNavigate } from "react-router-dom";
 
 const Appointments = () => {
   const { token } = useAppSelector((data) => data.doctor);
@@ -20,12 +27,25 @@ const Appointments = () => {
   const handleSearch = () => {
     setQuery(query.trim());
   };
+
+
+
+  const [showModal, setShowModal] = useState<boolean>(false);
+
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+
   const { appointments, loading, error } = useAppSelector(
     (state) => state.appointment
   );
   const dispatch = useAppDispatch();
-
-  const [currentPage, setCurrentPage] = useState<number>(1);
+ const navigate = useNavigate();
+   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const itemsPerPage: number = 5;
 
@@ -123,6 +143,16 @@ const Appointments = () => {
     }
   }, [debounceQuery]);
 
+  const [add, setAdd] = useState<boolean>(false);
+
+  const handleModalAction = (action: string) => {
+    if (action === "add") {
+      setAdd(true);
+    } else if (action === "view") {
+      setAdd(false);
+    }
+  };
+
   return (
     <div>
       <section className="bg-[#fff9ea] py-6 mt-[10px]">
@@ -165,6 +195,12 @@ const Appointments = () => {
             </th>
             <th scope="col" className="px-6 py-3">
               Booked on
+            </th>
+            <th scope="col" className="px-6 py-3">
+              video calls
+            </th>
+            <th scope="col" className="px-6 py-3">
+              Records
             </th>
           </tr>
         </thead>
@@ -216,10 +252,35 @@ const Appointments = () => {
                   hour12: true,
                 })}
               </td>
+              <td className="px-6 py-4">
+              <FcVideoCall size={25} onClick={()=>navigate(`/doctor/videoCall?email=${item.email}&name=${item.name}`)} />
+              </td>
+              <td className="px-6 py-4">
+                <PiDotsThreeCircle
+                  size={25}
+                  color="black"
+                  onClick={openModal}
+                />
+              </td>
+                
+              <FullScreenModal
+                showModal={showModal}
+                setShowModal={setShowModal}
+                doctor={true}
+                onActionClick={handleModalAction}
+              >
+                {/* Modal content */}
+                <h3 className="text-lg leading-6 font-medium text-gray-900">
+                  {add ? "Add pre" : "Patient Details"}
+                </h3>
+                {/* Add your modal content here */}
+                {add ? <AddPrescription userId={item._id} /> : <ViewPrescriptions userId={item._id} />}
+              </FullScreenModal>
             </tr>
           ))}
         </tbody>
       </table>
+
       {/* Pagination buttons */}
       <div className="flex justify-center mt-10">
         <button

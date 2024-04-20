@@ -1,3 +1,4 @@
+import JitsiMeet from '../../components/JitsiMeet';
 import PrivateRoute from '../../components/doctor/PrivateRoute';
 import Dashboard from '../../pages/doctor/Dashboard';
 import Login from '../../pages/doctor/Login';
@@ -15,6 +16,7 @@ const Routers = () => {
         <Route path='/doctor/login' element={<Login />}/>
         <Route element = {<PrivateRoute />}>
         <Route path='/doctor/home' element={<Dashboard/>}/>
+        <Route path='/doctor/videoCall' element={<JitsiMeet/>}/>
         </Route>
       </Routes>
     </div>
