@@ -2,7 +2,24 @@ import { FaArrowRight } from "react-icons/fa6";
 import { doctors } from "../../assets/doctors";
 import StartIcon from "../../assets/images/Star.png";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { FiEye } from "react-icons/fi";
+import convertTime from "../../utilis/convertTime";
+
+import FullScreenModal from "../FullScreenModal";
+import ViewPrescriptions from "./ViewPrescriptions";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "../../app/hooks";
+
+import {
+  fetchPrescriptionFailed,
+  fetchPrescriptionStart,
+  fetchPrescriptionSuccess,
+  removeData,
+} from "../../slices/prescription";
+import axios from "axios";
+import { BASE_URL } from "../../config";
+import Review from "../user/Review";
 
 type Doctor = {
   doctor: {
@@ -18,7 +35,19 @@ type Doctor = {
   };
 };
 
-const DoctorCard = ({ doctor, booking  }: any) => {
+
+
+const DoctorCard = ({ doctor, booking }: any) => {
+  const [showModal, setShowModal] = useState<boolean>(false);
+ 
+  const openModal = () => {
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setShowModal(false);
+  };
+  
   const {
     _id,
     name,
@@ -27,14 +56,50 @@ const DoctorCard = ({ doctor, booking  }: any) => {
     photo,
     specialization,
     experience,
+    createdAt,
   } = doctor;
 
-  console.log("docto-", doctor);
-
+if(booking){
   
+  const { token,currentUser } = useAppSelector((data) => data.user);
+
+  const dispatch = useDispatch();
+  const authToken = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
 
 
+  useEffect(() => {
+   
+    const fetchPrescription = async () => {
+      dispatch(fetchPrescriptionStart());
+        await axios.get(`${BASE_URL}/prescription/getPrescription?userId=${currentUser?._id}&doctorId=${_id}`,authToken)
+        .then((res:any)=>{
+          const {message,data} = res.data;
+          console.log('data-',data)
+          dispatch(fetchPrescriptionSuccess(data));
+        })
+        .catch((err)=>{
+          dispatch(fetchPrescriptionFailed(err.response.message));
+          //toast.error(err.response.data.message);
+        })
+    };
+    fetchPrescription();
+  }, []);
 
+}
+
+const [review, setReview] = useState<boolean>(false);
+
+const handleModalAction = (action: string) => {
+  if (action === "review") {
+    setReview(true);
+  } else  {
+    setReview(false);
+  }
+};
 
 
   return (
@@ -72,10 +137,31 @@ const DoctorCard = ({ doctor, booking  }: any) => {
           <p className="text-[14px] leading-6 font-[400] text-textColor">
             At {experience && experience?.[0]?.hospital}
           </p>
+          {booking && (
+            <p className="text-sm mt-3 bg-transparent">
+              {new Date(doctor.createdAt).toLocaleString(undefined, {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+                // hour: "numeric",
+                // minute: "numeric",
+                // hour12: true,
+              })}
+            </p>
+          )}
         </div>
 
         {booking ? (
-          <p>cancel</p>
+          <div>
+          
+            <button
+              className="rounded bg-primaryColor text-white w-[35px] h-[35px] px-2"
+              onClick={openModal}
+            >
+              <FiEye size={20}/>
+            </button>
+            <p className="text-sm text-center text-lime-800">view</p>
+          </div>
         ) : (
           <Link
             to={`/find-doctors/${_id}`}
@@ -84,8 +170,16 @@ const DoctorCard = ({ doctor, booking  }: any) => {
             <FaArrowRight className="group-hover:text-white w-6 h-6 mt-2 " />
           </Link>
         )}
+        {/* Modal */}
+        <FullScreenModal showModal={showModal} setShowModal={setShowModal} doctor={false} onActionClick={handleModalAction}>
+          {/* Modal content */}
+          <h3 className="text-lg leading-6 font-medium text-gray-900">
+          {review ? "Add Review" : "Prescription Details"}
+          </h3>
+          {/* Add your modal content here */}
+          {review ? <Review doctorId={_id} /> : <ViewPrescriptions/>}
+        </FullScreenModal>
       </div>
-
     </div>
   );
 };

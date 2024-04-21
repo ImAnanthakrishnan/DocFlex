@@ -1,4 +1,5 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
+//import thunk from 'redux-thunk';
 import UserReducer from '../slices/user/userSlice';
 import DoctorReducer from '../slices/doctor/doctorSlice';
 import AdminReducer from '../slices/admin/adminSlice';
@@ -8,6 +9,8 @@ import PhoneReducer from '../slices/phoneSlice';
 import UserListReducer from '../slices/admin/userListSlice';
 import SingleDoctorReducer from '../slices/doctorSlice';
 import AppointmentReducer from '../slices/doctor/appointmentSlice';
+import PrescrtiptionReducer from '../slices/prescription';
+import ReviewListReducer from '../slices/user//reviewListSlice';
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -46,7 +49,9 @@ const rootReducer = combineReducers({
     phone:PhoneReducer,
     userList: UserListReducer,
     singleDoctor:SingleDoctorReducer,
-    appointment:AppointmentReducer
+    appointment:AppointmentReducer,
+    prescription:PrescrtiptionReducer,
+    reviewList:ReviewListReducer
 });
 
 const store = configureStore({
