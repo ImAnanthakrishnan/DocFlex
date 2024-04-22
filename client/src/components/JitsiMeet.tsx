@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 import { JitsiMeeting } from "@jitsi/react-sdk";
 import { useAppSelector } from "../app/hooks";
+import axios from "axios";
+import { BASE_URL } from "../config";
+import { toast } from "react-toastify";
 
 const SERVICE_ID = import.meta.env.VITE_SERVICE_ID
 const TEMPLATE_ID = import.meta.env.VITE_TEMPLATE_ID;
@@ -11,8 +14,14 @@ const JitsiMeet = () => {
   const email = new URLSearchParams(window.location.search).get("email");
   const name = new URLSearchParams(window.location.search).get("name");
 
-  const { currentDoctor } = useAppSelector((state) => state.doctor);
+  const { currentDoctor,token } = useAppSelector((state) => state.doctor);
   const [roomName, setRoomName] = useState<string | "">("");
+
+ const authToken = {
+  headers:{
+    Authorization:`Bearer ${token}`
+  }
+ }
 
   useEffect(() => {
     const generateRoomName = () => {
@@ -22,6 +31,8 @@ const JitsiMeet = () => {
       setRoomName(randomRoomName);
     };
     generateRoomName();
+    
+
   }, []);
   
   const domain = "meet.jit.si";
@@ -41,7 +52,18 @@ const JitsiMeet = () => {
   const sendEmail = async () => {
     const link = `https://${domain}/${roomName}`;
    
-    const templateParams = {
+
+    await axios.post(`${BASE_URL}/email/`,{
+      email,name,link
+    },authToken)
+    .then((res)=>{
+      console.log(res.data.message);
+    })
+    .catch((err)=>{
+        toast.error(err.response.data.message);
+    })
+
+   /* const templateParams = {
       to_name: `${email}`,
       from_name: `${name}`,
       message: `This is the link for the meeting - ${link}`,
@@ -54,7 +76,7 @@ const JitsiMeet = () => {
       console.log("Email sent successfully:", response);
     } catch (err) {
       console.log("Failed to send email:", err);
-    }
+    }*/
   };
 
   return (
