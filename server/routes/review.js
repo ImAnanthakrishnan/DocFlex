@@ -5,7 +5,8 @@ import { authenticate } from "../middleware/authMiddleware.js";
 const router = express.Router({mergeParams:true});
 
 router.route("/")
-.get(getAllReviews).post(authenticate, createReview)
+.get(getAllReviews)
+.post(authenticate, createReview)
 
 
 export default router;
