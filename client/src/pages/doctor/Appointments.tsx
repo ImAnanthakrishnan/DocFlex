@@ -16,6 +16,14 @@ import AddPrescription from "../../components/doctor/AddPrescription";
 import ViewPrescriptions from "../../components/doctor/ViewPrescriptions";
 import { FcVideoCall } from "react-icons/fc";
 import JitsiMeet from "../../components/JitsiMeet";
+
+import {
+  fetchPrescriptionFailed,
+  fetchPrescriptionStart,
+  fetchPrescriptionSuccess,
+  removeData,
+} from "../../slices/prescription";
+
 import { useNavigate } from "react-router-dom";
 
 const Appointments = () => {
@@ -28,12 +36,25 @@ const Appointments = () => {
     setQuery(query.trim());
   };
 
-
-
   const [showModal, setShowModal] = useState<boolean>(false);
-
-  const openModal = () => {
+  const [openModalSchedule, setOpenModalSchedule] = useState<boolean>(false);
+  const [timeChange, setTimeChange] = useState<string | "">("");
+  const [userId, setUserId] = useState<string>("");
+  const [name, setName] = useState<string | "">("");
+  const [email, setEmail] = useState<string | "">("");
+  const openModal = (userId: string) => {
     setShowModal(true);
+    setUserId(userId);
+  };
+
+  const openScheduleModel = async (name: string, email: string) => {
+    setOpenModalSchedule(true);
+    setName(name);
+    setEmail(email);
+  };
+
+  const closeScheduleModel = async () => {
+    setOpenModalSchedule(false);
   };
 
   const closeModal = () => {
@@ -44,8 +65,8 @@ const Appointments = () => {
     (state) => state.appointment
   );
   const dispatch = useAppDispatch();
- const navigate = useNavigate();
-   const [currentPage, setCurrentPage] = useState<number>(1);
+  const navigate = useNavigate();
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const itemsPerPage: number = 5;
 
@@ -81,6 +102,27 @@ const Appointments = () => {
       Authorization: `Bearer ${token}`,
     },
   };
+  const { currentDoctor: doctor } = useAppSelector((state) => state.doctor);
+
+  useEffect(() => {
+    const fetchPrescription = async () => {
+      dispatch(fetchPrescriptionStart());
+      await axios
+        .get(
+          `${BASE_URL}/prescription/getPrescription?userId=${userId}&doctorId=${doctor?._id}`,
+          authToken
+        )
+        .then((res) => {
+          const { message, data } = res.data;
+          dispatch(fetchPrescriptionSuccess(data));
+        })
+        .catch((err) => {
+          dispatch(fetchPrescriptionFailed(err.response.message));
+          //toast.error(err.response.data.message);
+        });
+    };
+    fetchPrescription();
+  }, [userId]);
 
   useEffect(() => {
     async function fetchAppointments() {
@@ -90,7 +132,7 @@ const Appointments = () => {
           `${BASE_URL}/doctors/getAppointments?query=${debounceQuery}`,
           authToken
         )
-        .then((res) => {
+        .then((res: any) => {
           dispatch(fetchAppointmentSuccess(res.data.data));
         })
         .catch((err) => {
@@ -102,7 +144,7 @@ const Appointments = () => {
   }, [debounceQuery == ""]);
 
   useEffect(() => {
-    // setQuery1('');
+    setQuery1("");
     const timeout = setTimeout(() => {
       setDebounceQuery(query);
     }, 700);
@@ -110,7 +152,7 @@ const Appointments = () => {
   }, [query]);
 
   useEffect(() => {
-    //setQuery('')
+    setQuery("");
     const timeout = setTimeout(() => {
       setDebounceQuery(query1);
     }, 700);
@@ -119,6 +161,7 @@ const Appointments = () => {
 
   useEffect(() => {
     const fetchDoctorsWithSearch = async () => {
+      dispatch(removeData());
       dispatch(fetchAppointmentStart());
       try {
         const res = await axios.get(
@@ -153,6 +196,32 @@ const Appointments = () => {
     }
   };
 
+  const handleTimeSchedule = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (timeChange == "") {
+      return toast.error("please add the time");
+    }
+
+    await axios
+      .post(
+        `${BASE_URL}/email1`,
+        {
+          timeChange,
+          email,
+          name,
+        },
+        authToken
+      )
+      .then((res) => {
+        toast.success(res.data.message);
+        setOpenModalSchedule(false);
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
+  };
+
   return (
     <div>
       <section className="bg-[#fff9ea] py-6 mt-[10px]">
@@ -177,6 +246,40 @@ const Appointments = () => {
             className="py-3 pl-4 pr-2 bg-transparent  focus:outline cursor-pointer placeholder:text-textColor w-[200px]"
           />
         </div>
+        <ul className="  flex  gap-2 mt-5 justify-center">
+          <li>
+            <label className="flex items-center space-x-2 cursor-pointer bg-gray-200 px-3 py-1 rounded-md">
+              <input type="radio" name="filter" />
+              <p className="text-[15px] leading-6 text-textColor font-semibold">
+                All
+              </p>
+            </label>
+          </li>
+          <li>
+            <label className="flex items-center space-x-2 cursor-pointer bg-gray-200 px-3 py-1 rounded-md">
+              <input type="radio" name="filter" />
+              <p className="text-[15px] leading-6 text-textColor font-semibold">
+                Upcoming
+              </p>
+            </label>
+          </li>
+          <li>
+            <label className="flex items-center space-x-2 cursor-pointer bg-gray-200 px-3 py-1 rounded-md">
+              <input type="radio" name="filter" />
+              <p className="text-[15px] leading-6 text-textColor font-semibold">
+                Completed
+              </p>
+            </label>
+          </li>
+          <li>
+            <label className="flex items-center space-x-2 cursor-pointer bg-gray-200 px-3 py-1 rounded-md">
+              <input type="radio" name="filter" />
+              <p className="text-[15px] leading-6 text-textColor font-semibold">
+                Cancelled
+              </p>
+            </label>
+          </li>
+        </ul>
       </section>
       <table className="w-full text-left text-sm text-gray-500">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
@@ -197,7 +300,7 @@ const Appointments = () => {
               Booked on
             </th>
             <th scope="col" className="px-6 py-3">
-              video calls
+              Meeting
             </th>
             <th scope="col" className="px-6 py-3">
               Records
@@ -221,11 +324,25 @@ const Appointments = () => {
                 <div className="pl-3">
                   <div className="text-base font-semibold">{item.name}</div>
                   <div className="text-normal text-gray-500">{item.email}</div>
+                  {item.modeOfAppointment === "online" && (
+                    <button
+                      onClick={() => openScheduleModel(item.name, item.email)}
+                      className="rounded-md bg-irisBlueColor w-28 h-8 mt-3"
+                    >
+                      Reschedule
+                    </button>
+                  )}
                 </div>
               </th>
               <td className="px-6 py-4">{item.gender}</td>
               <td className="px-6 py-4">
-                {item.isPaid && (
+                {item.isPaid && item.status === "cancelled" ? (
+                  <div className="flex items-center">
+                    <div className=" rounded-full text-red-500 mr-2">
+                      cancelled
+                    </div>
+                  </div>
+                ) : (
                   <div className="flex items-center">
                     <div className=" rounded-full text-green-500 mr-2">
                       Paid
@@ -253,16 +370,27 @@ const Appointments = () => {
                 })}
               </td>
               <td className="px-6 py-4">
-              <FcVideoCall size={25} onClick={()=>navigate(`/doctor/videoCall?email=${item.email}&name=${item.name}`)} />
+                {item.modeOfAppointment === "online" ? (
+                  <FcVideoCall
+                    size={30}
+                    onClick={() =>
+                      navigate(
+                        `/doctor/videoCall?email=${item.email}&name=${item.name}`
+                      )
+                    }
+                  />
+                ) : (
+                  <p>Offline</p>
+                )}
               </td>
               <td className="px-6 py-4">
                 <PiDotsThreeCircle
                   size={25}
                   color="black"
-                  onClick={openModal}
+                  onClick={() => openModal(item._id)}
                 />
               </td>
-                
+
               <FullScreenModal
                 showModal={showModal}
                 setShowModal={setShowModal}
@@ -274,8 +402,43 @@ const Appointments = () => {
                   {add ? "Add pre" : "Patient Details"}
                 </h3>
                 {/* Add your modal content here */}
-                {add ? <AddPrescription userId={item._id} /> : <ViewPrescriptions userId={item._id} />}
+                {add ? (
+                  <AddPrescription userId={item._id} />
+                ) : (
+                  <ViewPrescriptions userId={item._id} />
+                )}
               </FullScreenModal>
+              {openModalSchedule && (
+                <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex justify-center items-center">
+                  <div className="bg-white rounded-lg w-3/4 md:w-1/2 lg:w-1/3 p-4">
+                    <div className="flex justify-between items-center mb-4">
+                      <h2 className="text-lg font-semibold">Time Scheduling</h2>
+                      <button
+                        className="text-gray-500 hover:text-gray-700"
+                        onClick={closeScheduleModel}
+                      >
+                        &times;
+                      </button>
+                    </div>
+                    <div className="modal-content">
+                      <form onSubmit={handleTimeSchedule}>
+                        <p>Enter the time</p>
+                        <input
+                          type="time"
+                          className="form__input"
+                          onChange={(e) => setTimeChange(e.target.value)}
+                        />
+                        <button
+                          type="submit"
+                          className="bg-primaryColor w-full h-10 text-white mt-4"
+                        >
+                          Update
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              )}
             </tr>
           ))}
         </tbody>

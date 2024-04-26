@@ -58,6 +58,10 @@ import userRoute from './routes/user.js';
 import oAuthRoute from './routes/oAuth.js';
 import bookingRoute from './routes/booking.js';
 import reviewRoute from './routes/review.js';
+import prescriptionRoute from './routes/prescription.js';
+import walletRoute from './routes/wallet.js';
+import jitsiEmailRoute from './routes/jitsiEmail.js';
+import emailRoute from './routes/email.js';
 
 app.use('/api/v1/auth' , authRoute);
 app.use('/api/v1/doctors',doctorRoute);
@@ -66,6 +70,11 @@ app.use('/api/v1/user',userRoute);
 app.use('/auth',oAuthRoute);
 app.use('/api/v1/bookings' , bookingRoute);
 app.use('/api/v1/reviews',reviewRoute);
+app.use('/api/v1/prescription',prescriptionRoute);
+app.use('/api/v1/wallet',walletRoute);
+app.use('/api/v1/email',jitsiEmailRoute);
+app.use('/api/v1/email1',emailRoute);
+
 
 
 app.use(notFound);
