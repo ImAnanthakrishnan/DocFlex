@@ -62,7 +62,7 @@ const FullScreenModal = ({
               {children}
             </div>
             {doctor ? (
-              <div className="p-4 bg-gray-100 border-t border-gray-200 flex justify-end">
+              <div className="p-4 bg-gray-100 border-t border-gray-200 flex justify-between">
                 <button
                   onClick={() => handleActionClick("view")}
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -77,10 +77,10 @@ const FullScreenModal = ({
                 </button>
               </div>
             ) : (
-              <div className="p-4 bg-gray-100 border-t border-gray-200 flex justify-end">
+              <div className="p-4 bg-gray-100 border-t border-gray-200 flex justify-between">
                 <button
                   onClick={() => handleActionClick("review")}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded "
                 >
                   Give Feedback
                 </button>
