@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useAppSelector } from "../../app/hooks";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 import Tabs from "../../components/doctor/Tabs";
 
@@ -7,16 +7,56 @@ import StartIcon from '../../assets/images/Star.png';
 import Profile from "../../pages/doctor/Profile";
 import DoctorAbout from "../user/Doctors/DoctorAbout";
 import Appointments from "./Appointments";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { BASE_URL } from "../../config";
+import { signOut } from "../../slices/doctor/doctorSlice";
+import Experience from "./Experience";
+import Education from "./Education";
+import OnlineTimeSlots from "./OnlineTimeSlots";
+import OfflineTimeSlots from "./OfflineTimeSlots";
 
 const Dashboard = () => {
 
   const [tab, setTab] = useState<string>("overview");
   const location = useLocation();
+  const [status,setStatus] = useState<boolean>(false);
 
-  const { currentDoctor } = useAppSelector(
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const { currentDoctor,token } = useAppSelector(
     (state) => state.doctor
   );
+
+  const authToken = {
+    headers :{
+      Authorization : `Bearer ${token}`
+    }
+  }
+
+  useEffect(() => {
+
+    const blocked = async() => {
+      await axios.get(`${BASE_URL}/auth/blocked/${'doctor'}/${currentDoctor?._id}`,authToken)
+      .then((res) => {
+        const {is_blocked} = res.data;
+        if(is_blocked){
+            setStatus(true);
+        }
+      })
+      .catch((err) => {
+        console.log(err.response.data.message);
+      })
+    }
+    blocked();
+
+  },[]);
+
+  if(status){
+    dispatch(signOut());
+    navigate('/doctor/login');
+  }
 
   if(currentDoctor && location.pathname === '/' ){
     return <Navigate to="/doctor/home" />
@@ -96,6 +136,10 @@ const Dashboard = () => {
                 <div className="mt-8">
                   {tab === 'appointments' && <div><Appointments/></div>}
                   {tab === 'settings' && <div> <Profile /> </div>}
+                  {tab === 'experience' && <div> <Experience /> </div>}
+                  {tab === 'education' && <div> <Education /> </div>}
+                  {tab === 'onlinetimeslots' && <div> <OnlineTimeSlots /> </div>}
+                  {tab === 'offlinetimeslots' && <div> <OfflineTimeSlots /> </div>}
                 </div>
 
               </div>

@@ -10,7 +10,7 @@ import { ZodType, z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-type Doctor = {
+export type Doctor = {
   name?: string;
   email?: string;
   //password:any;
@@ -35,9 +35,27 @@ type Doctor = {
     day: string;
     startingTime: string;
     endingTime: string;
+    patientPerDay:string;
   }[];
+  onlineTimeSlots:{
+    day:string;
+    startingTime: string;
+    endingTime: string;
+    patientPerDay:string;
+  }[]
   photo?: string;
 };
+
+type ErrorType = {
+  name:string;
+  email:string;
+  phone:string;
+  bio:string;
+  specialization:string;
+  gender:string;
+  ticketPrice:string|number;
+  photo:string;
+}
 
 const Profile = () => {
   const { currentDoctor, token } = useAppSelector((data) => data.doctor);
@@ -66,7 +84,14 @@ const Profile = () => {
       day: time.day,
       startingTime: time.startingTime,
       endingTime: time.endingTime,
-    })) || [{day: "", startingTime: "", endingTime: "" }],
+      patientPerDay:time.patientPerDay,
+    })) || [{day: "", startingTime: "", endingTime: "", patientPerDay:"" }],
+    onlineTimeSlots: currentDoctor?.onlineTimeSlots?.map((time:any) => ({
+      day: time.day,
+      startingTime: time.startingTime,
+      endingTime: time.endingTime,
+      patientPerDay:time.patientPerDay,
+    })) || [{day: "", startingTime: "", endingTime: "", patientPerDay:"" }],
     photo: currentDoctor?.photo,
   });
 
@@ -152,7 +177,7 @@ const Profile = () => {
     formState: { errors },
   } = useForm<Doctor>({ resolver: zodResolver(doctorSchema) });*/
 
-  const [errors, setErrors] = useState<Doctor >({
+  const [errors, setErrors] = useState<ErrorType >({
     name: '',
     email: '',
     // password:"",
@@ -161,22 +186,13 @@ const Profile = () => {
     gender: '',
     specialization: '',
     ticketPrice: '',
-    qualification: [
-       { startingDate: "", endingDate: "", degree: "", university: "" },
-    ],
-    experience: [
-       { startingDate: "", endingDate: "", position: "", hospital: "" },
-    ],
-    timeSlots: [
-      { day: "", startingTime: "", endingTime: "" }
-    ],
     photo: '',
   });
 
 
   const validateForm = () => {
     let valid = true;
-    const newErrors:Doctor = {...errors};
+    const newErrors:ErrorType = {...errors};
 
     if (!formData.name) {
       newErrors.name = 'Name is required';
@@ -239,65 +255,6 @@ const Profile = () => {
       newErrors.ticketPrice = '';
     }
 
-    newErrors.qualification = formData?.qualification?.map((qual) => {
-      const error: any = {};
-      if (!qual.startingDate) {
-        error.startingDate = 'Starting date is required';
-        valid = false;
-      }
-      if (!qual.endingDate) {
-        error.endingDate = 'Ending date is required';
-        valid = false;
-      }
-      if (!qual.degree) {
-        error.degree = 'Degree is required';
-        valid = false;
-      }
-      if (!qual.university) {
-        error.university = 'University is required';
-        valid = false;
-      }
-      return error;
-    });
-
-    newErrors.experience = formData.experience.map((exp) => {
-      const error: any = {};
-      if (!exp.startingDate) {
-        error.startingDate = 'Starting date is required';
-        valid = false;
-      }
-      if (!exp.endingDate) {
-        error.endingDate = 'Ending date is required';
-        valid = false;
-      }
-      if (!exp.position) {
-        error.position = 'Position is required';
-        valid = false;
-      }
-      if (!exp.hospital) {
-        error.hospital = 'Hospital is required';
-        valid = false;
-      }
-      return error;
-    });
-
-    newErrors.timeSlots = formData.timeSlots.map((slot) => {
-      const error: any = {};
-      if (!slot.day) {
-        error.day = 'Day is required';
-        valid = false;
-      }
-      if (!slot.startingTime) {
-        error.startingTime = 'Starting time is required';
-        valid = false;
-      }
-      if (!slot.endingTime) {
-        error.endingTime = 'Ending time is required';
-        valid = false;
-      }
-      return error;
-    });
-
     if (!formData.photo) {
       newErrors.photo = 'Photo is required';
       valid = false;
@@ -343,141 +300,7 @@ const Profile = () => {
     }
   };
 
-  const addItem = (key: keyof Doctor, item: any) => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [key]: [...(prevFormData[key] as any[]), item],
-    }));
-  };
 
-  //reusable input change function
-
-  const handleReusableInputChangeFnc = (
-    key: keyof Doctor,
-    index: number,
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = event.target;
-
-    setFormData((prevFormData) => {
-      const updateItems = [...(prevFormData[key] as any[])];
-
-      updateItems[index][name] = value;
-
-      return {
-        ...prevFormData,
-        [key]: updateItems,
-      };
-    });
-  };
-
-  //reusable function for deleting item
-  const deleteItem = (key: keyof Doctor, index: number) => {
-    /* setFormData(prevFormData => ({
-      ...prevFormData,
-      [key]:prevFormData[key]?.filter((_:undefined,i:number) => i!==index)
-     
-    }))*/
-    // console.log(formData)
-    setFormData((prevFormData) => {
-      if (!prevFormData || !(key in prevFormData)) {
-        return prevFormData; // or handle null/undefined case as needed
-      }
-
-      const dataArray = prevFormData[key];
-      if (!Array.isArray(dataArray)) {
-        return prevFormData; // or handle non-array case as needed
-      }
-
-      const updatedArray = dataArray.filter((_, i) => i !== index);
-
-      return {
-        ...prevFormData,
-        [key]: updatedArray,
-      };
-    });
-  };
-
-  const addQualification = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.preventDefault();
-
-    addItem("qualification", {
-      startingDate: "",
-      endingDate: "",
-      degree: "",
-      university: "",
-    });
-  };
-
-  const handleQualificationChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    handleReusableInputChangeFnc("qualification", index, event);
-  };
-
-  const deleteQualification = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    index: number
-  ) => {
-    e.preventDefault();
-    deleteItem("qualification", index);
-  };
-
-  const addExperience = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
-    e.preventDefault();
-
-    addItem("experience", {
-      startingDate: "",
-      endingDate: "",
-      position: "",
-      hospital: "",
-    });
-  };
-
-  const handleExperienceChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    index: number
-  ) => {
-    handleReusableInputChangeFnc("experience", index, event);
-  };
-
-  const deleteExperience = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    index: number
-  ) => {
-    e.preventDefault();
-    deleteItem("experience", index);
-  };
-
-  const addTimeSlots = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
-
-    addItem("timeSlots", {
-      day: "",
-      startingTime: "",
-      endingTime: "",
-    });
-  };
-
-  const handleTimeSlotsChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-    index: number
-  ) => {
-    handleReusableInputChangeFnc("timeSlots", index, event);
-  };
-
-  const deleteTimeSlots = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    index: number
-  ) => {
-    e.preventDefault();
-    deleteItem("timeSlots", index);
-  };
 
   return (
     <div>
@@ -595,273 +418,6 @@ const Profile = () => {
               )}
             </div>
           </div>
-        </div>
-
-        <div className="mb-5">
-          <p className="form__label">Qualification</p>
-          {formData.qualification?.map((item, index) => (
-            <div key={index}>
-              <div>
-                <div className="grid grid-cols-2 gap-5">
-                  <div>
-                    <p className="form__label">Starting Date*</p>
-                    <input
-                      type="date"
-                      //{...register(`qualification.${index}.startingDate`)}
-                      name="startingDate"
-                      value={item.startingDate}
-                      className="form__input"
-                      onChange={(e) => handleQualificationChange(e, index)}
-                    />
-                    {errors?.qualification?.[index]?.startingDate && (
-                      <p className="text-red-300">
-                        {errors?.qualification?.[index]?.startingDate}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <p className="form__label">Ending Date*</p>
-                    <input
-                      type="date"
-                     // {...register(`qualification.${index}.endingDate`)}
-                      name="endingDate"
-                      value={item.endingDate}
-                      className="form__input"
-                      onChange={(e) => handleQualificationChange(e, index)}
-                    />
-                    {errors?.qualification?.[index]?.endingDate && (
-                      <p className="text-red-300">
-                        {errors?.qualification?.[index]?.endingDate}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-5 mt-5">
-                  <div>
-                    <p className="form__label">Degree*</p>
-                    <input
-                      type="text"
-                      //{...register(`qualification.${index}.degree`)}
-                      name="degree"
-                      value={item.degree}
-                      className="form__input"
-                      onChange={(e) => handleQualificationChange(e, index)}
-                    />
-                    {errors?.qualification?.[index]?.degree && (
-                      <p className="text-red-300">
-                        {errors?.qualification?.[index]?.degree}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <p className="form__label">University*</p>
-                    <input
-                      type="text"
-                     // {...register(`qualification.${index}.university`)}
-                      name="university"
-                      value={item.university}
-                      className="form__input"
-                      onChange={(e) => handleQualificationChange(e, index)}
-                    />
-                    {errors?.qualification?.[index]?.startingDate && (
-                      <p className="text-red-300">
-                        {errors?.qualification?.[index]?.university}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <button
-                  className="bg-red-600 p-2 rounded-full text-white text-[18px] mt-2 mb-[30px]
-                cursor-pointer"
-                  onClick={(e) => deleteQualification(e, index)}
-                >
-                  <AiOutlineDelete />
-                </button>
-              </div>
-            </div>
-          ))}
-          <button
-            onClick={addQualification}
-            className="bg-[#000] py-2 px-5 rounded text-white h-fit cursor-pointer"
-          >
-            Add Qualification
-          </button>
-        </div>
-
-        <div className="mb-5">
-          <p className="form__label">Experience</p>
-          {formData.experience?.map((item, index) => (
-            <div key={index}>
-              <div>
-                <div className="grid grid-cols-2 gap-5">
-                  <div>
-                    <p className="form__label">Starting Date*</p>
-                    <input
-                      type="date"
-                     // {...register(`experience.${index}.startingDate`)}
-                      name="startingDate"
-                      value={item.startingDate}
-                      className="form__input"
-                      onChange={(e) => handleExperienceChange(e, index)}
-                    />
-                    {errors?.experience?.[index]?.startingDate && (
-                      <p className="text-red-300">
-                        {errors?.experience?.[index]?.startingDate}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <p className="form__label">Ending Date*</p>
-                    <input
-                      type="date"
-                     // {...register(`experience.${index}.endingDate`)}
-                      name="endingDate"
-                      value={item.endingDate}
-                      className="form__input"
-                      onChange={(e) => handleExperienceChange(e, index)}
-                    />
-                    {errors?.experience?.[index]?.endingDate && (
-                      <p className="text-red-300">
-                        {errors?.experience?.[index]?.endingDate}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-5 mt-5">
-                  <div>
-                    <p className="form__label">Position*</p>
-                    <input
-                      type="text"
-                     // {...register(`experience.${index}.position`)}
-                      name="position"
-                      value={item.position}
-                      className="form__input"
-                      onChange={(e) => handleExperienceChange(e, index)}
-                    />
-                    {errors?.experience?.[index]?.position && (
-                      <p className="text-red-300">
-                        {errors?.experience?.[index]?.position}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <p className="form__label">Hospital*</p>
-                    <input
-                      type="text"
-                      //{...register(`experience.${index}.hospital`)}
-                      name="hospital"
-                      value={item.hospital}
-                      className="form__input"
-                      onChange={(e) => handleExperienceChange(e, index)}
-                    />
-                    {errors?.experience?.[index]?.hospital && (
-                      <p className="text-red-300">
-                        {errors?.experience?.[index]?.hospital}
-                      </p>
-                    )}
-                  </div>
-                </div>
-
-                <button
-                  className="bg-red-600 p-2 rounded-full text-white text-[18px] mt-2 mb-[30px]
-                cursor-pointer"
-                  onClick={(e) => deleteExperience(e, index)}
-                >
-                  <AiOutlineDelete />
-                </button>
-              </div>
-            </div>
-          ))}
-          <button
-            onClick={addExperience}
-            className="bg-[#000] py-2 px-5 rounded text-white h-fit cursor-pointer"
-          >
-            Add Experience
-          </button>
-        </div>
-
-        <div className="mb-5">
-          <p className="form__label">Time Slots</p>
-          {formData.timeSlots?.map((item, index) => (
-            <div key={index}>
-              <div>
-                <div className="grid grid-cols-2 md:grid-cols-4 mb-[30px] gap-5">
-                  <div>
-                    <p className="form__label">Day*</p>
-                    <select
-                     name="day"
-                      value={item.day}
-                      className="form__input py-3.5"
-                      onChange={(e) => handleTimeSlotsChange(e, index)}
-                    >
-                      <option value="">Select</option>
-                      <option value="saturday">Saturday</option>
-                      <option value="sunday">Sunday</option>
-                      <option value="monday">Monday</option>
-                      <option value="tuesday">Tuesday</option>
-                      <option value="wednesday">Wednesday</option>
-                      <option value="thursday">Thursday</option>
-                      <option value="friday">Friday</option>
-                    </select>
-                    {errors?.timeSlots?.[index]?.day && (
-                      <p className="text-red-300">
-                        {errors?.timeSlots?.[index]?.day}
-                      </p>
-                    )}
-                  </div>
-
-                  <div>
-                    <p className="form__label">Starting Time*</p>
-                    <input
-                      type="time"
-                     // {...register(`timeSlots.${index}.startingTime`)}
-                      name="startingTime"
-                      value={item.startingTime}
-                      className="form__input"
-                      onChange={(e) => handleTimeSlotsChange(e, index)}
-                    />
-                    {errors?.timeSlots?.[index]?.startingTime && (
-                      <p className="text-red-300">
-                        {errors?.timeSlots?.[index]?.startingTime}
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <p className="form__label">Ending Time*</p>
-                    <input
-                      type="time"
-                     // {...register(`timeSlots.${index}.endingTime`)}
-                      name="endingTime"
-                      value={item.endingTime}
-                      className="form__input"
-                      onChange={(e) => handleTimeSlotsChange(e, index)}
-                    />
-                    {errors?.timeSlots?.[index]?.endingTime && (
-                      <p className="text-red-300">
-                        {errors?.timeSlots?.[index]?.endingTime}
-                      </p>
-                    )}
-                  </div>
-                  <div className="flex items-center">
-                    <button
-                      onClick={(e) => deleteTimeSlots(e, index)}
-                      className="bg-red-600 p-2 rounded-full text-white text-[18px]  mb-[30px]
-                cursor-pointer mt-6"
-                    >
-                      <AiOutlineDelete />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-          <button
-            onClick={addTimeSlots}
-            className="bg-[#000] py-2 px-5 rounded text-white h-fit cursor-pointer"
-          >
-            Add TimeSlot
-          </button>
         </div>
 
         <div className="mb-5 flex items-center gap-3">
