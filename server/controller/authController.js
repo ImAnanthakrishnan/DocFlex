@@ -24,7 +24,7 @@ const generateToken = (user) => {
 };
 
 //nodemailer
-let transporter = nodemailer.createTransport({
+export let transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: process.env.AUTH_EMAIL,
@@ -467,4 +467,26 @@ export const resetPassword = asyncHandler(async (req, res) => {
       .status(500)
       .json({ success: false, message: "Internal server error, try again" });
   }
+});
+
+export const blockedUser = asyncHandler(async(req,res) => {
+  const {user,userId} = req.params;
+
+  let blocked = null
+
+  if(user === 'patient'){
+    blocked = await User.findOne({_id:userId});
+  }
+
+  if(user === 'doctor'){
+    blocked = await Doctor.findOne({_id:userId});
+  }
+
+  if(!blocked){
+    return res.status(404).json({success:false,message:'User not found'});
+  }
+
+  const {is_blocked} = blocked._doc;
+
+  res.status(200).json({success:true,message:'success',is_blocked});
 });

@@ -37,6 +37,14 @@ const doctorSchema = mongoose.Schema(
       type:String,
       default:''
   },
+  extraCharges:{
+    type:Number,
+    default:0
+  },
+  role:{
+    type:String,
+    default:'doctor'
+  },
     // Fields for doctors only
     specialization: {
       type: String,
@@ -55,6 +63,9 @@ const doctorSchema = mongoose.Schema(
     },
     timeSlots: {
       type: Array,
+    },
+    onlineTimeSlots:{
+      type:Array
     },
     reviews: [
       {

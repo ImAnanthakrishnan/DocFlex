@@ -2,47 +2,56 @@ import jwt from "jsonwebtoken";
 import Doctor from "../models/doctorModel.js";
 import User from "../models/userModel.js";
 
-export const authenticate = async(req,res,next) => {
-    //get token from headers
-    
-    const authToken = req.headers.authorization;
+export const authenticate = async (req, res, next) => {
+  //get token from headers
+    console.log(req.headers.authorization);
+  const authToken = req.headers.authorization;
+  console.log(authToken);
+  // check token is exist
+  if (!authToken || !authToken.startsWith("Bearer")) {
+    return res
+      .status(401)
+      .json({ success: false, message: "No token, authorization denied" });
+  }
 
-    // check token is exist 
-    if(!authToken || !authToken.startsWith('Bearer')){
-        return res.status(401).json({success:false,message:'No token, authorization denied'});
+  try {
+    const token = authToken.split(" ")[1];
+
+    //verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+
+    req.userId = decoded.id;
+
+    next();
+  } catch (err) {
+    if (err.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token is expired" });
     }
 
-    try{
-        const token = authToken.split(" ")[1];
+    return res.status(401).json({ success: false, message: "Invalid Token" });
+  }
+};
 
-        //verify token
-        const decoded = jwt.verify(token,process.env.JWT_SECRET_KEY);
-    
-        req.userId = decoded.id;
-        
-        next()
-    }catch(err){
-        if(err.name === 'TokenExpiredError'){
-            return res.status(401).json({message:'Token is expired'});
-        }
+export const restrict = (roles) => async (req, res, next) => {
+  const userId = req.userId;
 
-        return res.status(401).json({success:false,message:'Invalid Token'})
-    }
-}
+  let user;
 
-export const restrict = async(req,res,next) => {
-    const userId = req.userId;
+  const patient = await User.findById(userId);
+  const doctor = await Doctor.findById(userId);
 
-    let user ;
+  if (patient) {
+    user = patient;
+  }
 
-    const patient = await User.findById(userId);
-    const doctor = await Doctor.findById(userId);
+  if (doctor) {
+    user = doctor;
+  }
 
-    if(patient){
-        user = patient;
-    }
-
-    if(doctor){
-        user = doctor;
-    }
-}
+  if (!roles.includes(user.role)) {
+    return res
+      .status(401)
+      .json({ success: false, message: "You're not authorized" });
+  }
+  next();
+};

@@ -38,10 +38,14 @@ const userSchema = mongoose.Schema({
         type:Boolean,
         default:false
     },
+    role:{
+        type:String,
+        default:'patient'
+    },
     is_admin:{
         type:Number,
         default:0
-    }
+    },
 },{timestamps:true});
 
 const User = mongoose.model('User',userSchema);
