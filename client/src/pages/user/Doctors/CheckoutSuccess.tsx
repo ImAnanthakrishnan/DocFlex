@@ -1,8 +1,9 @@
-import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+
+import { Link, useParams } from "react-router-dom";
 
 const CheckoutSuccess = () => {
-  
+    let query = new URLSearchParams(window.location.search);
+    const cash = query.get('cash');
   return (
     <div className="bg-gray-100 h-screen">
       <div className="bg-white p-6 md:mx-auto">
@@ -33,7 +34,7 @@ const CheckoutSuccess = () => {
             d="M7.293 13.293L5.036 15.55a1 1 0 0 1-1.414-1.414l3.5-3.5a1 1 0 0 1 1.414 0L16.964 10.45a1 1 0 0 1-1.414 1.414L8.707 12.707a1 1 0 0 1-1.414-1.414l-.007.007z"
           />
         </svg>
-
+       
         <div className="text-center">
           <h3 className="md:text-2xl text-base text-gray-900 font-semibold text-center">
             Payment Done!
@@ -41,6 +42,7 @@ const CheckoutSuccess = () => {
           <p className="text-gray-600 my-2">
             Thank you for completing your secure online payment.
           </p>
+          {cash && <p>Avilable balance in wallet is : {cash}</p>}
           <p>Have a greate day!</p>
           <div className="py-10 text-center">
             <Link

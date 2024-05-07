@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 const appointmentDateSchema = new mongoose.Schema({
   day: { type: String, required: true },
   startingTime: { type: String, required: true },
-  endingTime: { type: String, required: true }
+  endingTime: { type: String, required: true },
+  date:{type:String,required:true}
 });
 
 const bookingSchema = new mongoose.Schema(
@@ -24,7 +25,7 @@ const bookingSchema = new mongoose.Schema(
     },
     session:{
       type:String,
-      required:true
+      //required:true
     },
     ticketPrice: { type: String, required: true },
 

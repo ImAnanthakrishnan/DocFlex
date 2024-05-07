@@ -12,12 +12,14 @@ export type Doctor = {
     qualification?:{}[];
     experience?:{}[];
     bio?:string;
-    timeSlots?:{}[]
+    timeSlots?:{}[];
+    onlineTimeSlots?:{}[];
     reviews?:{}[]
     averageRating?:number;
     totalRating?:number;
     isApproved?:string;
     appointments?:{}[];
+    extraCharges?:number;
 }
 
 type InitialState = {

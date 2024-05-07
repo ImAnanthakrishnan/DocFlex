@@ -340,7 +340,7 @@ const Doctors = () => {
                       {doctor.phone}
                     </td>
                     <td className="p-3 text-sm text-gray-700 whitespace-nowrap">
-                      <BsThreeDots onClick={() => toggleDropdown(doctor._id)} />
+                      <BsThreeDots size={25} onClick={() => toggleDropdown(doctor._id)} />
                     </td>
                   </tr>
                 ))

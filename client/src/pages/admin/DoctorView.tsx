@@ -17,6 +17,21 @@ const DoctorView = () => {
 
   const [isApproved, setIsApproved] = useState(false);
   const [isRejected, setIsRejected] = useState(false);
+  const [openModalRating, setOpenModalRating] = useState<boolean>(false);
+  const [extraCharge, setExtraCharge] = useState<string | undefined>(
+    singleDoctor?.extraCharges?.toString() || ''
+  );
+  
+
+  const openRatingModel = async () => {
+    setOpenModalRating(true);
+
+  };
+
+  const closeRatingModel = async () => {
+    setOpenModalRating(false);
+  };
+
 
   const dispatch = useAppDispatch();
 
@@ -69,6 +84,25 @@ const DoctorView = () => {
     })
   };
 
+  const handleSubmitCharges = async(e:React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if(extraCharge !== undefined && Number(extraCharge) <= 0){
+      return toast.error('charges can t be negative or zero ')
+    }
+
+    await axios.post(`${BASE_URL}/admin/extraCharges`,
+      {id:singleDoctor?._id,extraCharges:extraCharge},
+      authToken
+    )
+    .then((res) => {
+      toast.success(res.data.message)
+    })
+    .catch((err) => {
+      toast.error(err.response.data.message);
+    })
+
+  }
 
 
   return (
@@ -90,22 +124,20 @@ const DoctorView = () => {
                 alt="avatar"
               />
             </div>
+            <p className="text-center ">{singleDoctor?.name}</p>
+             <p className="text-center mt-2">{singleDoctor?.email}</p>
 
             <ul className="sidebar-list">
-              <li className="sidebar-list-item text-center">
-                <Link to="/admin/home">
-                  <MdHealthAndSafety
-                    color="rgb(102 181 163)"
-                    className="icon"
-                  />
-                  <span>Details</span>
-                </Link>
+              <li className="sidebar-list-item text-center bg-orange-300 border-zinc-400 mb-3 mt-3 rounded-sm" >
+              
+                <button onClick={openRatingModel}>
+                  <span className="" >Ratings</span>
+                  </button>
+            
               </li>
-              <li className="sidebar-list-item text-center">
-                <Link to="/admin/doctors">
-                  <FaUserDoctor color="rgb(102 181 163)" className="icon" />
-                  Appointments
-                </Link>
+              <li className="sidebar-list-item text-center  bg-primaryColor rounded-sm border hover:bg-transparent hover:border-gray-500 hover:text-black border-zinc-400 ">
+               
+                 <span className="text-irisBlueColor">Charges</span> 
               </li>
             </ul>
           </div>
@@ -313,6 +345,45 @@ const DoctorView = () => {
             </div>
           </div>
         </div>
+        {openModalRating && (
+                <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex justify-center items-center">
+                  <div className="bg-white rounded-lg w-3/4 md:w-1/2 lg:w-1/3 p-4">
+                    <div className="flex justify-between items-center mb-4">
+                      <h2 className="text-lg font-semibold">Extra charges</h2>
+                      <button
+                        className="text-gray-500 hover:text-gray-700"
+                        onClick={closeRatingModel}
+                      >
+                        &times;
+                      </button>
+                    </div>
+                    <div className="modal-content">
+                      <form onSubmit={handleSubmitCharges} >
+                        <p>Enter the Charges</p>
+                        <input
+                          min={1}
+                          type="number"
+                          value={extraCharge === '' ? '' : Number(extraCharge).toString()}
+                          className="form__input"
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            // Validate and update state
+                            if (/^\d*\.?\d*$/.test(value) || value === '') {
+                              setExtraCharge(value);
+                            }
+                          }}
+                        />
+                        <button
+                          type="submit"
+                          className="bg-primaryColor w-full h-10 text-white mt-4"
+                        >
+                          Update
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              )}
       </div>
     </section>
   );

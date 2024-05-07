@@ -5,6 +5,7 @@ import {
   signInSuccess,
   signInFailure,
 } from "../../slices/user/userSlice";
+import googleImg from "../../assets/images/btn_google_signin_dark_pressed_web.png";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import axios from "axios";
 import { BASE_URL } from "../../config";
@@ -125,6 +126,20 @@ const Login = () => {
       });
   };
 
+  function navigateUrl(url:string){
+    window.location.href = url
+  }
+
+  async function auth(){
+    const response = await fetch(`${BASE_URL}/auth`,
+      {method:'post'}
+    );
+    const data = await response.json();
+    
+    navigateUrl(data.url);
+
+  }
+
   return (
     <section className="px-5 lg:px-0">
       <div className="w-full max-w-[570px] mx-auto rounded-lg shadow-md md:p-10">
@@ -181,6 +196,12 @@ const Login = () => {
               >
                 {loading ? <HashLoader size={35} color="#ffffff" /> : "Login"}
               </button>
+            </div>
+            <p className="text-center text-headingColor mt-2">or</p>
+            <div className="flex justify-center">
+            <button className="mt-3" type="button" onClick={() => auth()}>
+                  <img  src={googleImg} alt="google sign in" />
+            </button>
             </div>
             <p className="mt-5 text-textColor text-center">
               Don&apos;t have an account?{" "}

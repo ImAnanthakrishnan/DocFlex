@@ -4,7 +4,11 @@ import { BsJustify, BsSearch, BsFillBellFill, BsFillEnvelopeFill, BsPersonCircle
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { signOut } from '../../slices/admin/adminSlice';
 
-const Header = () => {
+type PropsType = {
+  OpenSidebar : ()=>void;
+}
+
+const Header = ({OpenSidebar}:PropsType) => {
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
@@ -28,7 +32,7 @@ const Header = () => {
   return (
     <header className="admin-header hidden md:flex">
       <div className="menu-icon">
-        <BsJustify className="icon" />
+        <BsJustify className="icon" onClick={OpenSidebar} />
       </div>
       <div className="header-left">
         <BsSearch className="icon" />

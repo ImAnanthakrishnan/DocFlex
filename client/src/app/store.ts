@@ -11,6 +11,7 @@ import SingleDoctorReducer from '../slices/doctorSlice';
 import AppointmentReducer from '../slices/doctor/appointmentSlice';
 import PrescrtiptionReducer from '../slices/prescription';
 import ReviewListReducer from '../slices/user//reviewListSlice';
+import DashDataReducer from '../slices/admin/dashboardSlice';
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
@@ -51,7 +52,8 @@ const rootReducer = combineReducers({
     singleDoctor:SingleDoctorReducer,
     appointment:AppointmentReducer,
     prescription:PrescrtiptionReducer,
-    reviewList:ReviewListReducer
+    reviewList:ReviewListReducer,
+    dashData:DashDataReducer
 });
 
 const store = configureStore({

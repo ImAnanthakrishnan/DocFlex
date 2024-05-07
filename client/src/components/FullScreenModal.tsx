@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useCallback, useState,useRef } from "react";
+import { useReactToPrint } from "react-to-print";
+import { toast } from "react-toastify";
 
 type PropsType = {
   showModal: boolean;
@@ -13,9 +15,10 @@ const FullScreenModal = ({
   children,
   doctor,
   onActionClick,
-}: PropsType & { onActionClick?: (action: string) => void }) => {
+  onActionRef
+}: PropsType & { onActionClick?: (action: string) => void , onActionRef?:(action:any)=>void }) => {
   const [downloadBtn, setDownloadBtn] = useState<boolean>(true);
-  const handleActionClick = (action: string) => {
+  const handleActionClick = useCallback((action: string) => {
     if (onActionClick) {
       onActionClick(action);
     }
@@ -28,7 +31,23 @@ const FullScreenModal = ({
       setDownloadBtn(true)
     }
     
-  };
+  },[onActionClick]);
+
+
+  const componentPdf = useRef<any>(0);
+  const generatePdf = useReactToPrint({
+    content: () => componentPdf.current,
+    documentTitle: "PrescriptionData",
+    onAfterPrint: () => toast.success("Data saved in PDF"),
+  });
+
+
+    if(onActionRef){
+      onActionRef(componentPdf);
+    }
+
+
+
   return (
     <>
       {showModal && (
@@ -86,7 +105,7 @@ const FullScreenModal = ({
                 </button>
                 {downloadBtn ? (
                   <button
-                    
+                  onClick={generatePdf}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                   >
                     Download

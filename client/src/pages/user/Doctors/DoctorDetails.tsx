@@ -130,7 +130,9 @@ const DoctorDetails = () => {
               <SidePanel
                 doctorId={singleDoctor?._id}
                 ticketPrice={singleDoctor?.ticketPrice}
+                extraCharges = {singleDoctor?.extraCharges}
                 timeSlots={singleDoctor?.timeSlots}
+                onlineSlots={singleDoctor?.onlineTimeSlots}
               />
             </div>
           </div>

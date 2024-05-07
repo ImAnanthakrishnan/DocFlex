@@ -2,13 +2,18 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 
 type Appointment = {
+    _id:string;
     name:string;
     gender:string;
     email:string;
     photo:string
     isPaid:boolean;
-    ticketPrice:number
+    ticketPrice:number;
+    extraCharges?:number;
+    totalCharges?:number;
+    modeOfAppointment:string;
     createdAt:string;
+    status:string;
 } 
 
 type InitialState = {

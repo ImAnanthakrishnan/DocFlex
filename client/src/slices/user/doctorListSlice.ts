@@ -4,6 +4,15 @@ import  { Doctor as Doctor1 } from "../doctor/doctorSlice";
 
 interface Doctor extends Doctor1{
     createdAt : string;
+    appointmentDate?:{
+        day:string;
+        startingTime:string;
+        endingTime:string;
+        date:string;
+    },
+    modeOfAppointment:string;
+    status?:string;
+    bookingId?:string
 }
 
 type DoctorListState = {
@@ -29,7 +38,7 @@ const ApprovedDoctorListSlice = createSlice({
         },
         fetchDoctorListSuccess : (state,action: PayloadAction<any[]>) => {
             state.loading = false;
-            state. approvedDoctorList = action.payload.map((item) => item._doc);
+            state. approvedDoctorList = action.payload;
         
         },
         fetchDoctorListFailed : (state,action:PayloadAction<string | undefined>) => {

@@ -110,10 +110,15 @@ const MyAccount = () => {
               {tab === "bookings" && <MyBooking />}
 
               {tab === "settings" && <Profile />}
+              
             </div>
+            
           </div>
         )}
+        
       </div>
+
+
     </section>
   );
 };

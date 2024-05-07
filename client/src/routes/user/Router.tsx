@@ -13,6 +13,8 @@ import CheckoutSuccess from '../../pages/user/Doctors/CheckoutSuccess';
 import MyAccount from '../../pages/user/user-account/MyAccount';
 import EmailCheck from '../../components/EmailCheck';
 import ForgotVerify from '../../components/ForgotVerify';
+import ChatPage from '../../pages/ChatPage';
+import Maps from '../../pages/user/Maps';
 const Routers = () => {
   return (
     <div>
@@ -29,6 +31,8 @@ const Routers = () => {
         <Route path='find-doctors/:id' element={<DoctorDetails />} />
         <Route path='/checkout-success' element={<CheckoutSuccess />} />
         <Route path='/profile/me' element={<MyAccount />} />
+        <Route path='/chats' element={<ChatPage />} />
+        <Route path='/maps' element={<Maps />} />
         </Route>
         <Route path='/forgotVerify' element={<EmailCheck />} />
         <Route path='/reset' element={<ForgotVerify />} />

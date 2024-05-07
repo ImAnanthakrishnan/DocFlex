@@ -34,6 +34,7 @@ const Appointments = () => {
   const [debounceQuery, setDebounceQuery] = useState<string | "">("");
   const handleSearch = () => {
     setQuery(query.trim());
+    
   };
 
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -42,9 +43,11 @@ const Appointments = () => {
   const [userId, setUserId] = useState<string>("");
   const [name, setName] = useState<string | "">("");
   const [email, setEmail] = useState<string | "">("");
-  const openModal = (userId: string) => {
+  const [status,setStatus] = useState<string | ''>('');
+  const openModal = (user: string) => {
     setShowModal(true);
-    setUserId(userId);
+    setUserId(user);
+   
   };
 
   const openScheduleModel = async (name: string, email: string) => {
@@ -133,11 +136,12 @@ const Appointments = () => {
           authToken
         )
         .then((res: any) => {
+          console.log('res-',res.data.data);
           dispatch(fetchAppointmentSuccess(res.data.data));
         })
         .catch((err) => {
           dispatch(fetchAppointmentFailed(err.response.data.message));
-          toast.error(err);
+          toast.error(err.response.data.message);
         });
     }
     fetchAppointments();
@@ -172,6 +176,7 @@ const Appointments = () => {
           }
         );
         const { data } = res?.data;
+        console.log('datpa-'+data)
 
         dispatch(fetchAppointmentSuccess(data));
       } catch (err: any) {
@@ -185,6 +190,33 @@ const Appointments = () => {
       fetchDoctorsWithSearch();
     }
   }, [debounceQuery]);
+
+  useEffect(() => {
+    const fetchDoctorsWithStatus = async () => {
+      dispatch(removeData());
+      dispatch(fetchAppointmentStart());
+      try {
+        const res = await axios.get(
+          `${BASE_URL}/doctors/getAppointments?status=${status}`,
+          {
+            ...authToken,
+            //params: { query: debounceQuery },
+          }
+        );
+        const { data } = res?.data;
+
+        dispatch(fetchAppointmentSuccess(data));
+      } catch (err: any) {
+        const { message } = err.response.data;
+        dispatch(fetchAppointmentFailed(message));
+        toast.error(message);
+      }
+    };
+
+    if (status !== "") {
+      fetchDoctorsWithStatus();
+    }
+  }, [status]);
 
   const [add, setAdd] = useState<boolean>(false);
 
@@ -249,7 +281,7 @@ const Appointments = () => {
         <ul className="  flex  gap-2 mt-5 justify-center">
           <li>
             <label className="flex items-center space-x-2 cursor-pointer bg-gray-200 px-3 py-1 rounded-md">
-              <input type="radio" name="filter" />
+              <input type="radio" name="filter" onClick={() => setStatus('All')}  />
               <p className="text-[15px] leading-6 text-textColor font-semibold">
                 All
               </p>
@@ -257,7 +289,7 @@ const Appointments = () => {
           </li>
           <li>
             <label className="flex items-center space-x-2 cursor-pointer bg-gray-200 px-3 py-1 rounded-md">
-              <input type="radio" name="filter" />
+              <input type="radio" name="filter" onClick={() => setStatus('Upcoming')} />
               <p className="text-[15px] leading-6 text-textColor font-semibold">
                 Upcoming
               </p>
@@ -265,7 +297,7 @@ const Appointments = () => {
           </li>
           <li>
             <label className="flex items-center space-x-2 cursor-pointer bg-gray-200 px-3 py-1 rounded-md">
-              <input type="radio" name="filter" />
+              <input type="radio" name="filter" onClick={() => setStatus('Completed')} />
               <p className="text-[15px] leading-6 text-textColor font-semibold">
                 Completed
               </p>
@@ -273,7 +305,7 @@ const Appointments = () => {
           </li>
           <li>
             <label className="flex items-center space-x-2 cursor-pointer bg-gray-200 px-3 py-1 rounded-md">
-              <input type="radio" name="filter" />
+              <input type="radio" name="filter" onClick={() => setStatus('Cancelled')} />
               <p className="text-[15px] leading-6 text-textColor font-semibold">
                 Cancelled
               </p>
@@ -321,6 +353,7 @@ const Appointments = () => {
                   className="w-10 h-10 rounded-full"
                   alt=""
                 />
+                
                 <div className="pl-3">
                   <div className="text-base font-semibold">{item.name}</div>
                   <div className="text-normal text-gray-500">{item.email}</div>
@@ -391,23 +424,7 @@ const Appointments = () => {
                 />
               </td>
 
-              <FullScreenModal
-                showModal={showModal}
-                setShowModal={setShowModal}
-                doctor={true}
-                onActionClick={handleModalAction}
-              >
-                {/* Modal content */}
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                  {add ? "Add pre" : "Patient Details"}
-                </h3>
-                {/* Add your modal content here */}
-                {add ? (
-                  <AddPrescription userId={item._id} />
-                ) : (
-                  <ViewPrescriptions userId={item._id} />
-                )}
-              </FullScreenModal>
+
               {openModalSchedule && (
                 <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex justify-center items-center">
                   <div className="bg-white rounded-lg w-3/4 md:w-1/2 lg:w-1/3 p-4">
@@ -443,7 +460,23 @@ const Appointments = () => {
           ))}
         </tbody>
       </table>
-
+             {showModal && <FullScreenModal
+                showModal={showModal}
+                setShowModal={setShowModal}
+                doctor={true}
+                onActionClick={handleModalAction}
+              >
+                {/* Modal content */}
+                <h3 className="text-lg leading-6 font-medium text-gray-900">
+                  {add ? "Add pre" : "Patient Details"}
+                </h3>
+                {/* Add your modal content here */}
+                {add ? (
+                  <AddPrescription userId={userId} />
+                ) : (
+                  <ViewPrescriptions userId={userId} user={'admin'} />
+                )}
+              </FullScreenModal>}
       {/* Pagination buttons */}
       <div className="flex justify-center mt-10">
         <button

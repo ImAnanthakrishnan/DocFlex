@@ -3,20 +3,24 @@ import { MdHealthAndSafety } from "react-icons/md";
 import { FaUserDoctor,FaHospitalUser } from "react-icons/fa6";
 import { BsMenuButtonWideFill } from "react-icons/bs";
 import { Link } from "react-router-dom";
-const Sidebar = () => {
+type propsType = {
+  openSidebarToggle:boolean;
+  OpenSidebar : ()=>void;
+}
+const Sidebar = ({openSidebarToggle,OpenSidebar}:propsType) => {
   return (
     
-      <aside id="sidebar" className="hidden md:block">
+      <aside id="sidebar" className={openSidebarToggle ? "sidebar-responsive":""}>
         <div className="sidebar-title">
           <div className="sidebar-brand">
           <img src={logo} alt="" className="h-12 w-12" />  Admin
           </div>
-          <span className="icon close_icon">X</span>
+          <span className="icon close_icon" onClick={OpenSidebar}>X</span>
         </div>
         <ul className="sidebar-list">
           <li className="sidebar-list-item">
             <Link to="/admin/home">
-              <MdHealthAndSafety color="rgb(102 181 163)" className="icon"/> <span>Dashboard</span>
+              <MdHealthAndSafety color="rgb(102 181 163)" className="icon"/> Dashboard
             </Link>
           </li>
           <li className="sidebar-list-item">
@@ -30,9 +34,9 @@ const Sidebar = () => {
             </Link>
           </li>
           <li className="sidebar-list-item">
-            <a href="">
+            <Link to="/admin/reports">
               <BsMenuButtonWideFill color="rgb(102 181 163)" className="icon"/> Reports
-            </a>
+            </Link>
           </li>
         </ul>
       </aside>

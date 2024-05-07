@@ -23,6 +23,7 @@ const MyBooking = () => {
   const [query, setQuery] = useState<string | "">("");
   const [query1, setQuery1] = useState<string | "">("");
   const [debounceQuery, setDebounceQuery] = useState<string | "">("");
+  const [status,setStatus] = useState<string | ''>('');
   const handleSearch = () => {
     setQuery(query.trim());
   };
@@ -58,7 +59,7 @@ const MyBooking = () => {
     }
   };
 
-  const { token } = useAppSelector((data) => data.user);
+  const { token, currentUser } = useAppSelector((data) => data.user);
 
   const dispatch = useDispatch();
   const authToken = {
@@ -78,6 +79,7 @@ const MyBooking = () => {
         )
         .then((res: any) => {
           const { data, message } = res.data;
+          console.log("data-", data);
 
           dispatch(fetchDoctorListSuccess(data));
         })
@@ -131,6 +133,33 @@ const MyBooking = () => {
     }
   }, [debounceQuery]);
 
+  useEffect(() => {
+    const fetchDoctorsWithStatus = async () => {
+      dispatch(fetchDoctorStart());
+      try {
+        const res = await axios.get(
+          `${BASE_URL}/user/appointments/my-appointments?status=${status}`,
+          {
+            ...authToken,
+            //params: { query: debounceQuery },
+          }
+        );
+        const { data } = res?.data;
+
+        dispatch(fetchDoctorListSuccess(data));
+      } catch (err: any) {
+        const { message } = err.response.data;
+        dispatch(fetchDoctorListFailed(message));
+        toast.error(message);
+      }
+    };
+
+    if(status !== ""){
+      fetchDoctorsWithStatus();
+    }
+  
+  },[status]);
+
   return (
     <div>
       <section className="bg-[#fff9ea] py-6 mt-[10px]">
@@ -155,6 +184,40 @@ const MyBooking = () => {
             className="py-3 pl-4 pr-2 bg-transparent  focus:outline cursor-pointer placeholder:text-textColor w-[200px]"
           />
         </div>
+        <ul className="  flex md:float-right flex-col gap-2 mt-5 justify-center">
+          <li>
+            <label className="flex items-center space-x-2 cursor-pointer bg-gray-200 px-3 py-1 rounded-md">
+              <input type="radio" name="filter" onClick={() => setStatus('All')} />
+              <p className="text-[15px] leading-6 text-textColor font-semibold">
+                All
+              </p>
+            </label>
+          </li>
+          <li>
+            <label className="flex items-center space-x-2 cursor-pointer bg-gray-200 px-3 py-1 rounded-md">
+              <input type="radio" name="filter" onClick={() => setStatus('Upcoming')}/>
+              <p className="text-[15px] leading-6 text-textColor font-semibold">
+                Upcoming
+              </p>
+            </label>
+          </li>
+          <li>
+            <label className="flex items-center space-x-2 cursor-pointer bg-gray-200 px-3 py-1 rounded-md">
+              <input type="radio" name="filter" onClick={() => setStatus('Completed')}/>
+              <p className="text-[15px] leading-6 text-textColor font-semibold">
+                Completed
+              </p>
+            </label>
+          </li>
+          <li>
+            <label className="flex items-center space-x-2 cursor-pointer bg-gray-200 px-3 py-1 rounded-md">
+              <input type="radio" name="filter" onClick={() => setStatus('Cancelled')}/>
+              <p className="text-[15px] leading-6 text-textColor font-semibold">
+                Cancelled
+              </p>
+            </label>
+          </li>
+        </ul>
       </section>
 
       {loading && !error && <Loader />}
@@ -162,8 +225,8 @@ const MyBooking = () => {
 
       {!loading && !error && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          {currentDoctors.map((doctor) => (
-            <DoctorCard key={doctor._id} doctor={doctor} booking={true} />
+          {currentDoctors.map((doctor,index) => (
+            <DoctorCard key={index} doctor={doctor} booking={true} />
           ))}
         </div>
       )}

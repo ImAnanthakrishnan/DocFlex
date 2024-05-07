@@ -3,8 +3,11 @@ import logo from "../../../assets/images/Screenshot (257).png";
 import userImg from "../../../assets/images/profile.png";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import {signOut} from '../../../slices/user/userSlice'
+import { signOut } from "../../../slices/user/userSlice";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
+import axios from "axios";
+import { BASE_URL } from "../../../config";
+import { MdMessage } from "react-icons/md";
 const navLinks = [
   {
     path: "/home",
@@ -25,13 +28,15 @@ const navLinks = [
 ];
 
 const Header = () => {
-  const { currentUser } = useAppSelector((data) => data.user);
+  const { currentUser, token } = useAppSelector((data) => data.user);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const headerRef = useRef<HTMLDivElement | null>(null);
   const menuRef = useRef<HTMLDivElement | null>(null);
+
+  const [status, setStatus] = useState<boolean>(false);
 
   const handleStickyHeader = () => {
     window.addEventListener("scroll", () => {
@@ -46,12 +51,42 @@ const Header = () => {
     });
   };
 
+  const authToken = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
   useEffect(() => {
     handleStickyHeader();
 
     return () => window.removeEventListener("scroll", handleStickyHeader);
-  });  
+  });
 
+  useEffect(() => {
+    const blocked = async () => {
+      await axios
+        .get(
+          `${BASE_URL}/auth/blocked/${"patient"}/${currentUser?._id}`,
+          authToken
+        )
+        .then((res) => {
+          const { is_blocked } = res.data;
+          if (is_blocked) {
+            setStatus(true);
+          }
+        })
+        .catch((err) => {
+          console.log(err.response.data.message);
+        });
+    };
+    blocked();
+  }, []);
+
+  if (status) {
+    dispatch(signOut());
+    navigate("/login");
+  }
 
   const toggleMenu = () => menuRef.current?.classList.toggle("show__menu");
 
@@ -87,17 +122,25 @@ const Header = () => {
           {/* ===== nav right ====== */}
           <div className="flex items-center gap-4">
             {currentUser ? (
-              <div className="relative">
-                <div className="cursor-pointer" onClick={()=>{navigate('/profile/me')}}>
-                 
-                    <figure className="w-[35px] h-[35px] rounded-full">
-                      <img
-                        src={currentUser.photo}
-                        className="w-full rounded-full"
-                        alt=""
-                      />
-                    </figure>
-              
+              <div className="relative flex items-center gap-3 flex-row-reverse">
+                <div
+                  className="cursor-pointer"
+                  onClick={() => {
+                    navigate("/profile/me");
+                  }}
+                >
+                  <figure className="w-[35px] h-[35px] rounded-full">
+                    <img
+                      src={currentUser.photo}
+                      className="w-full rounded-full"
+                      alt=""
+                    />
+                  </figure>
+                </div>
+                <div>
+                  <Link to='/chats' >
+                  <MdMessage size={25} />
+                  </Link>
                 </div>
               </div>
             ) : (

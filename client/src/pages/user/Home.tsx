@@ -6,20 +6,31 @@ import icon01 from "../../assets/images/icon01.png";
 import icon02 from "../../assets/images/icon02.png";
 import icon03 from "../../assets/images/icon03.png";
 
-import { Link, Navigate, useLocation, } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate, } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa6";
 import {  useAppSelector } from "../../app/hooks";
+import { useEffect } from "react";
 
 
 const Home = () => {
 
   const location = useLocation();
 
-
+  let navigate = useNavigate();
   const {currentUser} = useAppSelector(state => state.user);
   if(currentUser && location.pathname === '/' ){
     return <Navigate to="/home" />
   }
+
+  /*useEffect(() => {
+    const userInfoString = localStorage.getItem("userInfo");
+    if (userInfoString) {
+      const userInfo = JSON.parse(userInfoString);
+     if(userInfo){
+      navigate('/chats');
+     }
+    }
+  },[navigate])*/
 
   return (
     <>
