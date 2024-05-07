@@ -7,6 +7,7 @@ import { BASE_URL } from "../../config";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { fetchPrescriptionFailed, fetchPrescriptionStart, fetchPrescriptionSuccess } from "../../slices/prescription";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
  type Prescription = {
   symptoms: string;
   disease: string;
@@ -28,7 +29,7 @@ type ImageType = {
   img: string;
 }[];
 const AddPrescription = ({userId}:PropsType) => {
-  console.log('id-',userId)
+  const navigate = useNavigate();
  // const [selectedFile, setSelectedFile] = useState<ImageType>([{img:""}]);
   const [formData, setFormData] = useState<Prescription>({
     symptoms: "",
@@ -182,6 +183,7 @@ const AddPrescription = ({userId}:PropsType) => {
       const {data,message} = res.data;
      // dispatch(fetchPrescriptionSuccess(data));
       toast.success(message);
+     
     })
     .catch((err)=>{
     //  dispatch(fetchPrescriptionFailed(err.response.message));

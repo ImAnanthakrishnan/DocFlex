@@ -46,8 +46,7 @@ export const addPrescription = asyncHandler(async (req, res) => {
 
 export const getAllPrescription = asyncHandler(async (req, res) => {
   const { userId, doctorId,query } = req.query;
-  console.log('user-',userId);
-  console.log('doctor-',doctorId)
+
   if (!userId && !doctorId) {
     return res.status(400).json({ sucess: false, message: "Bad Request" });
   }
