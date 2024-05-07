@@ -16,6 +16,7 @@ import {
   googleAuthUser,
   forgotVerify,
   resetPassword,
+  blockedUser,
 } from "../controller/authController.js";
 
 import { OAuth2Client } from "google-auth-library";
@@ -70,5 +71,7 @@ router.post('/',async function (req, res, next) {
 
  router.post('/forgot-verify',forgotVerify);
  router.post('/resetPassword' , resetPassword);
+
+ router.get('/blocked/:user/:userId',authenticate,blockedUser);
 
 export default router;

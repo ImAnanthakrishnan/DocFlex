@@ -1,16 +1,17 @@
 import express from 'express';
 
-import { authenticate } from '../middleware/authMiddleware.js';
-import { deleteUser, getAllUser, getMyAppointments, updateUser } from '../controller/userController.js';
+import { authenticate,restrict } from '../middleware/authMiddleware.js';
+import { allDoctors, deleteUser, getAllUser, getMyAppointments, updateUser } from '../controller/userController.js';
 
 const router = express.Router();
 
-router.get('/getAllUsers' ,authenticate , getAllUser);
+router.get('/getAllUsers' ,authenticate ,restrict(['admin']), getAllUser);
 
 router.route('/:id')
-.put(authenticate , updateUser)
-.delete(authenticate,deleteUser);
+.put(authenticate ,restrict(['patient']) ,updateUser)
+.delete(authenticate,restrict(['patient']) ,deleteUser);
 
-router.get('/appointments/my-appointments', authenticate , getMyAppointments);
+router.get('/appointments/my-appointments', authenticate ,restrict(['patient'])  ,getMyAppointments);
 
-export default router
+router.get('/users' ,authenticate,restrict(['patient']),allDoctors)
+export default router;

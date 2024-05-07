@@ -44,9 +44,7 @@ router.get("/google", async function (req, res, next) {
 
   } catch (err) {
     console.log(err)
-    res
-      .status(400)
-      .json({ success: false, message: "Error with signing in Google " });
+    res.redirect(`http://localhost:5173/login`);
   }
 });
 
@@ -78,7 +76,7 @@ router.get("/google1", async function (req, res, next) {
        // phone:'+91',
         //is_verified:true
       });
-      try {
+      try { 
         let savedUser = await newUser.save();
         console.log('User saved:', savedUser);
       } catch (saveError) {
