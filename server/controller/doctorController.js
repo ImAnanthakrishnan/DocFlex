@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import Doctor from "../models/doctorModel.js";
 import User from "../models/userModel.js";
 import Booking from "../models/bookingModel.js";
+import { all,completed,cancelled,upcoming } from "../helpers/appointmentStatus.js";
 
 export const updateDoctor = asyncHandler(async (req, res) => {
   const id = req.params.id;
@@ -42,13 +43,11 @@ export const getAllApprovedDoctor = asyncHandler(async (req, res) => {
         "-password"
       );
     }
-    const allDoctors = doctors.map(
-      ({ password, updatedAt, __v, $__, $isNew, ...rest }) => rest
-    );
+
     res.status(200).json({
       success: true,
       message: "doctors found",
-      data: allDoctors,
+      data: doctors,
     });
   } catch (err) {
     res.status(404).json({ success: false, message: "Not found" });
@@ -121,7 +120,7 @@ export const getSingleDoctor = asyncHandler(async (req, res) => {
 
 export const getMyAppointments = async (req, res) => {
   try {
-    const { query } = req.query;
+    const { query,status } = req.query;
     let bookings = null;
 
     if (query) {
@@ -135,50 +134,65 @@ export const getMyAppointments = async (req, res) => {
 
         bookings = await Booking.find({
           doctor: req.userId,
-          createdAt: { $gte: startOfDay, $lt: endOfDay },
+          'appointmentDate.date': {
+            $gt: startOfDay.toISOString().split('T')[0], // Convert to ISO date format (YYYY-MM-DD)
+            $lte: endOfDay.toISOString().split('T')[0], // Convert to ISO date format (YYYY-MM-DD)
+          },
         })
           .populate("user", "name gender photo email") // Populate the 'user' field with 'name' and 'gender'
-          .select("createdAt") // Select only 'createdAt'
-          .select("ticketPrice") // Select only 'ticketPrice'
-          .select("isPaid")
+
           .sort({ createdAt: -1 });
       } else {
         
         const searchCriteria = {
           doctor: req.userId,
-          $or: [
-            { "user.name": { $regex: query, $options: "i" } },
-            { "user.email": { $regex: query, $options: "i" } },
-          ],
         };
-
+        
         bookings = await Booking.find(searchCriteria)
           .populate({
             path: "user",
-            select: "name gender photo email",
+            select: "name email gender photo ", 
+            match: {
+              $or: [
+                { name: { $regex: new RegExp(query, 'i') } }, // Case-insensitive search for user name
+                { email: { $regex: new RegExp(query, 'i') } }, // Case-insensitive search for user email
+              ],
+            },
           })
           .sort({ createdAt: -1 });
+
       }
-      console.log("bo-", bookings);
-    } else {
+    
+    } else if(status){
+      if (status === "All") {
+        bookings = await all(req,'doctor');
+      } else if (status === "Upcoming") {
+        bookings  = await upcoming(req,'doctor');
+      } else if (status === "Completed") {
+        bookings = await completed(req,'doctor');
+      } else {
+        bookings = await cancelled(req,'doctor');
+      }
+    }else {
+
       bookings = await Booking.find({ doctor: req.userId })
         .populate("user", "name gender photo email") // Populate the 'user' field with 'name' and 'gender'
-        .select("createdAt") // Select only 'createdAt'
-        .select("ticketPrice") // Select only 'ticketPrice'
-        .select("isPaid")
         .sort({ createdAt: -1 });
     }
 
-    console.log(bookings);
+    
 
     const data = bookings.map((booking) => ({
+      _id:booking.user._id,
       name: booking.user.name,
       gender: booking.user.gender,
       email: booking.user.email,
       photo: booking.user.photo,
       ticketPrice: booking.ticketPrice,
+      modeOfAppointment:booking.modeOfAppointment,
       isPaid: booking.isPaid,
       createdAt: booking.createdAt,
+      status:booking.status
     }));
 
     res
@@ -193,3 +207,29 @@ export const getMyAppointments = async (req, res) => {
     res.status(500).json({ success: false, message: "Failed fetching data" });
   }
 };
+
+export const allUsers = asyncHandler(async (req, res) => {
+  let bookings,doctors;
+
+  const keyword = req.query.search;
+
+
+  if (keyword) {
+      // Fetch upcoming doctors based on the search criteria
+      bookings= await upcoming(req, 'doctor');
+
+      let filteredUsers = bookings.map(booking => booking.user);
+
+      const regex = new RegExp(keyword,"i")// "i" flag for case-insensitive matching
+  
+      // Filter doctors based on email or name matching the search query using regex
+      filteredUsers = filteredUsers.filter(user => 
+        regex.test(user.email) || regex.test(user.name)
+      );
+
+      doctors = filteredUsers;
+
+  } 
+
+  res.json(doctors);
+});
