@@ -1,6 +1,6 @@
 import { useState } from "react";
-import logo from "../../assets/images/Screenshot (257).png";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+
+import {  Navigate, useNavigate } from "react-router-dom";
 import {
   Start,
   signInSuccess,

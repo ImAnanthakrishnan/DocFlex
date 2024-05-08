@@ -5,7 +5,7 @@ const FeedbackForm = () => {
     const [rating,setRating] = useState<number>(0);
     const [hover,setHover] = useState<number>(0);
     const [reviewText,setReviewText] = useState<string | ''>('');
-
+console.log(reviewText)
     const handleSubmitReview = async(e:React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
     }

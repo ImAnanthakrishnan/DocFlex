@@ -7,7 +7,7 @@ import StartIcon from "../../assets/images/Star.png";
 import Profile from "../../pages/doctor/Profile";
 import DoctorAbout from "../user/Doctors/DoctorAbout";
 import Appointments from "./Appointments";
-import { Link, NavLink, Navigate, useLocation, useNavigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_URL } from "../../config";
 import { signOut } from "../../slices/doctor/doctorSlice";
@@ -16,7 +16,7 @@ import Education from "./Education";
 import OnlineTimeSlots from "./OnlineTimeSlots";
 import OfflineTimeSlots from "./OfflineTimeSlots";
 import { MdMessage } from "react-icons/md";
-import { Tooltip } from "@chakra-ui/react";
+
 
 const Dashboard = () => {
   const [tab, setTab] = useState<string>("overview");

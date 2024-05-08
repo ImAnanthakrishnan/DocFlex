@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
-import signupImg from "../../assets/images/signup.gif";
+
 //import avatar from "../../assets/images/profile.png";
-import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
+
 import axios from "axios";
-import { ZodType, z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+
 
 import uploadImageCloudinary from "../../../utilis/uploadCloudinary";
 
@@ -14,7 +12,7 @@ import { toast } from "react-toastify";
 import { HashLoader } from "react-spinners";
 
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
-import { signInFailure, signInSuccess, updateSuccess } from "../../../slices/user/userSlice";
+import { signInFailure,  updateSuccess } from "../../../slices/user/userSlice";
 
 type User = {
   name?: string;
@@ -29,13 +27,13 @@ type User = {
 
 const Profile = () => {
   const [selectedFile, setSelectedFile] = useState<string | "">("");
-  
+  console.log(selectedFile)
   const {token,currentUser} = useAppSelector(data=>data.user);
 
 
 
   const [loading, setLoading] = useState<Boolean>(false);
-  const [imgError, setImgError] = useState<Boolean>(false);
+  //const [imgError, setImgError] = useState<Boolean>(false);
 
   const [formData, setFormData] = useState<User>({
     name: "",
@@ -64,7 +62,7 @@ const Profile = () => {
     photo:''
   })
 
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>

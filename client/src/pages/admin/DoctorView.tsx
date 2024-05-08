@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { MdHealthAndSafety } from "react-icons/md";
-import { FaUserDoctor, FaHospitalUser } from "react-icons/fa6";
-import { BsMenuButtonWideFill } from "react-icons/bs";
-import avatar from "../../assets/images/profile1.png";
-import { Link } from "react-router-dom";
+
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -11,7 +7,7 @@ import { BASE_URL } from "../../config";
 import { Failure, Start, Success } from "../../slices/doctorSlice";
 
 const DoctorView = () => {
-  const { loading, singleDoctor, error } = useAppSelector(
+  const {  singleDoctor } = useAppSelector(
     (data) => data.singleDoctor
   );
 

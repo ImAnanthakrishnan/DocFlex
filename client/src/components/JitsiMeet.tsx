@@ -1,14 +1,14 @@
-import React, { useEffect, useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
+import  { useEffect, useRef, useState } from "react";
+//import emailjs from "@emailjs/browser";
 import { JitsiMeeting } from "@jitsi/react-sdk";
 import { useAppSelector } from "../app/hooks";
 import axios from "axios";
 import { BASE_URL } from "../config";
 import { toast } from "react-toastify";
 
-const SERVICE_ID = import.meta.env.VITE_SERVICE_ID
+/*const SERVICE_ID = import.meta.env.VITE_SERVICE_ID
 const TEMPLATE_ID = import.meta.env.VITE_TEMPLATE_ID;
-const PUBLIC_KEY = import.meta.env.VITE_PUBLIC_KEY;
+const PUBLIC_KEY = import.meta.env.VITE_PUBLIC_KEY;*/
 
 const JitsiMeet = () => {
   const email = new URLSearchParams(window.location.search).get("email");

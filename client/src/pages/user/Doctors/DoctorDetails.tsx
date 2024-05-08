@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 
 import starIcon from "../../../assets/images/Star.png";
 import DoctorAbout from "./DoctorAbout";

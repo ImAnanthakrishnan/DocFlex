@@ -21,8 +21,8 @@ type PropsType = {
  let socket:Socket | undefined , selectedChatCompare : any;
 
 
-const SingleChat = ({ fetchAgain, setFetchAgain }: PropsType) => {
-  console.log(fetchAgain)
+const SingleChat = ({ fetchAgain,setFetchAgain }: PropsType) => {
+  console.log(fetchAgain,setFetchAgain)
   const [messages, setMessages] = useState<[] | any>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [newMessage, setNewMessage] = useState<string>('');

@@ -71,8 +71,8 @@ const Users = () => {
       await axios
         .get(`${BASE_URL}/user/getAllUsers?query=${debounceQuery}`, authToken)
         .then((res: any) => {
-          const { data, message } = res?.data;
-          let result = data.map((item: any) => item._doc);
+          const { data } = res?.data;
+         // let result = data.map((item: any) => item._doc);
 
           dispatch(fetchDoctorListSuccess(data));
         })
@@ -108,8 +108,8 @@ const Users = () => {
       await axios
         .get(`${BASE_URL}/user/getAllUsers?query=${debounceQuery}`, authToken)
         .then((res: any) => {
-          const { data, message } = res?.data;
-          let result = data.map((item: any) => item._doc);
+          const { data, } = res?.data;
+         // let result = data.map((item: any) => item._doc);
 
           dispatch(fetchDoctorListSuccess(data));
         })

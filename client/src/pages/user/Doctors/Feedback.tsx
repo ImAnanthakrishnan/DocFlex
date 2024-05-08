@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import avatar from "../../../assets/images/profile.png";
+import  { useEffect } from "react";
+
 import { AiFillStar } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
@@ -10,7 +10,7 @@ import {
 import { toast } from "react-toastify";
 import { BASE_URL } from "../../../config";
 import axios from "axios";
-import convertTime from "../../../utilis/convertTime";
+
 import Loader from "../../../components/Loader";
 import Error from "../../../components/Error";
 
@@ -21,6 +21,7 @@ type PropsType = {
 };
 
 const Feedback = ({ reviews, totalRating, doctorId }: PropsType) => {
+  console.log(reviews)
   const dispatch = useAppDispatch();
   const { token } = useAppSelector((state) => state.user);
 

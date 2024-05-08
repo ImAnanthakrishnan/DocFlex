@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import  { useEffect } from 'react'
 import { ChatState } from '../../context/ChatProvider'
 import { Box, Stack, Text, useToast } from '@chakra-ui/react';
 import { useAppSelector } from '../../app/hooks';
@@ -51,12 +51,7 @@ const MyChats = ({fetchAgain}:propsType) => {
     fetchChats();
   },[fetchAgain])
 
-  if (chats[0]?.latestMessage && chats[0].latestMessage.doctorSender) {
-    const doctorSenderName = chats[0].latestMessage.doctorSender.name;
-    console.log("content:", chats[0]?.latestMessage.content);
-  } else {
-    console.log("Latest message or doctor sender not available.");
-  }
+
   
 
   console.log('chats-',chats[0]);

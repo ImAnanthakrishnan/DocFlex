@@ -1,5 +1,4 @@
-import React from 'react'
-import ScrollableFeed from 'react-scrollable-feed'
+
 import { isLastMessage, isSameSender,isSameSenderMargin, isSameUser } from '../../utilis/chat'
 import { useAppSelector } from '../../app/hooks'
 import { Avatar, Tooltip } from '@chakra-ui/react'

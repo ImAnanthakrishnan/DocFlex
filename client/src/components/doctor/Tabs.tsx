@@ -1,6 +1,6 @@
 import { BiMenu } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+import { useAppDispatch,  } from "../../app/hooks";
 import { signOut } from "../../slices/doctor/doctorSlice";
 import { useState } from "react";
 
@@ -12,7 +12,7 @@ type propsType = {
 const Tabs = ({ tab, setTab }: propsType) => {
   const [showDropdown, setShowDropdown] = useState<boolean>(false);
 
-  const { token } = useAppSelector((data) => data.doctor);
+  //const { token } = useAppSelector((data) => data.doctor);
   let navigate = useNavigate();
 
   let dispatch = useAppDispatch();

@@ -1,22 +1,17 @@
 import { FaArrowRight } from "react-icons/fa6";
-import { doctors } from "../../assets/doctors";
+
 import StartIcon from "../../assets/images/Star.png";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FiEye } from "react-icons/fi";
-import convertTime from "../../utilis/convertTime";
+
 
 import FullScreenModal from "../FullScreenModal";
 import ViewPrescriptions from "./ViewPrescriptions";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "../../app/hooks";
 
-import {
-  fetchPrescriptionFailed,
-  fetchPrescriptionStart,
-  fetchPrescriptionSuccess,
-  removeData,
-} from "../../slices/prescription";
+
 import axios from "axios";
 import { BASE_URL } from "../../config";
 import Review from "../user/Review";
@@ -28,7 +23,7 @@ import {
 } from "../../slices/user/doctorListSlice";
 import { ImLocation2 } from "react-icons/im";
 
-type Doctor = {
+/*type Doctor = {
   doctor: {
     _id: string | number;
     name: string;
@@ -40,7 +35,7 @@ type Doctor = {
     hospital: string;
     experience: string[];
   };
-};
+};*/
 
 const DoctorCard = ({ doctor, booking }: any) => {
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -53,9 +48,9 @@ const DoctorCard = ({ doctor, booking }: any) => {
    setShowLocationModal(true);
   }
 
-  const closeModal = () => {
+ /* const closeModal = () => {
     setShowModal(false);
-  };
+  };*/
 
   const closeLocationModal = () => {
     setShowLocationModal(false)
@@ -78,15 +73,15 @@ const DoctorCard = ({ doctor, booking }: any) => {
     photo,
     specialization,
     experience,
-    createdAt,
+ 
     appointmentDate,
     status,
     bookingId
   } = doctor;
-
+ 
   const [cancel, setCancel] = useState<string | "">("");
 
-  const { singleDoctor } = useAppSelector((data) => data.singleDoctor);
+  //const { singleDoctor } = useAppSelector((data) => data.singleDoctor);
 
   const handleCancel = async () => {
     setCancel("cancel");
@@ -102,7 +97,7 @@ const DoctorCard = ({ doctor, booking }: any) => {
     }
 
     try {
-      const response = await axios.post(
+       await axios.post(
         `${BASE_URL}/wallet/credit`,
         { userId: currentUser?._id, cash: doctor.ticketPrice,doctorId:_id },
         authToken
@@ -171,7 +166,7 @@ const DoctorCard = ({ doctor, booking }: any) => {
         await axios
           .get(`${BASE_URL}/user/appointments/my-appointments`, authToken)
           .then((res: any) => {
-            const { data, message } = res.data;
+            const { data } = res.data;
             console.log("data-", data);
 
             dispatch(fetchDoctorListSuccess(data));
@@ -200,7 +195,7 @@ const DoctorCard = ({ doctor, booking }: any) => {
   const handleRefAction = (action:any) => {
     setDownload(action);
   }
-  const { prescription } = useAppSelector((state) => state.prescription);
+  //const { prescription } = useAppSelector((state) => state.prescription);
 
   return (
     <div className="p-3 lg:p-5">

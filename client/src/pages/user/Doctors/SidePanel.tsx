@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { BASE_URL } from "../../../config";
 import { toast } from "react-toastify";
 import { useAppSelector } from "../../../app/hooks";

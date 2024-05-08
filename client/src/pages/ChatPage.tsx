@@ -1,8 +1,8 @@
-import axios from 'axios'
-import React, { useEffect, useState } from 'react'
-import { BASE_URL } from '../config'
+
+import  {  useState } from 'react'
+
 //import { ChatState } from '../context/ChatProvider'
-import { Box, Flex } from '@chakra-ui/react'
+import { Box} from '@chakra-ui/react'
 import { useAppSelector } from '../app/hooks'
 import SideDrawer from '../components/chats/SideDrawer'
 import MyChats from '../components/chats/MyChats'

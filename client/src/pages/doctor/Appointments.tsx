@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import convertTime from "../../utilis/convertTime";
+
 import axios from "axios";
 import { BASE_URL } from "../../config";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
@@ -15,7 +15,7 @@ import FullScreenModal from "../../components/FullScreenModal";
 import AddPrescription from "../../components/doctor/AddPrescription";
 import ViewPrescriptions from "../../components/doctor/ViewPrescriptions";
 import { FcVideoCall } from "react-icons/fc";
-import JitsiMeet from "../../components/JitsiMeet";
+
 
 import {
   fetchPrescriptionFailed,
@@ -60,11 +60,11 @@ const Appointments = () => {
     setOpenModalSchedule(false);
   };
 
-  const closeModal = () => {
+  /*const closeModal = () => {
     setShowModal(false);
-  };
+  };*/
 
-  const { appointments, loading, error } = useAppSelector(
+  const { appointments } = useAppSelector(
     (state) => state.appointment
   );
   const dispatch = useAppDispatch();
@@ -116,7 +116,7 @@ const Appointments = () => {
           authToken
         )
         .then((res) => {
-          const { message, data } = res.data;
+          const {  data } = res.data;
           dispatch(fetchPrescriptionSuccess(data));
         })
         .catch((err) => {

@@ -1,4 +1,4 @@
-import React from "react";
+//import React from "react";
 
 type QualificationType = {
   startingDate?: string;
@@ -30,7 +30,7 @@ const DoctorAbout = ({name,qualification,experience}:PropsType) => {
         items-center gap-2"
         >
           About of {name}
-          <span className="text-irishBlueColor font-semibold font-bold text-[24px] leading-9"></span>
+          <span className="text-irishBlueColor font-semibold  text-[24px] leading-9"></span>
         </h3>
         <p className="text__para">
           There are many variations of passages of Lorem Ipsum available, but

@@ -3,7 +3,7 @@ import PrivateRoute from '../../components/doctor/PrivateRoute';
 import ChatPage from '../../pages/ChatPage';
 import Dashboard from '../../pages/doctor/Dashboard';
 import Login from '../../pages/doctor/Login';
-import Profile from '../../pages/doctor/Profile';
+
 import Signup from '../../pages/doctor/Signup';
 
 import {Routes,Route} from 'react-router-dom'

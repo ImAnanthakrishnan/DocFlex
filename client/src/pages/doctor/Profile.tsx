@@ -1,14 +1,12 @@
 import { useState } from "react";
-import { AiOutlineDelete } from "react-icons/ai";
+
 import uploadImageCloudinary from "../../utilis/uploadCloudinary";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { Start, updateSuccess, Failure } from "../../slices/doctor/doctorSlice";
 
-import { ZodType, z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+
 
 export type Doctor = {
   name?: string;

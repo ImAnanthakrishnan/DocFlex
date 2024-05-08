@@ -1,6 +1,6 @@
 import { BiMenu } from "react-icons/bi";
 import logo from "../../../assets/images/Screenshot (257).png";
-import userImg from "../../../assets/images/profile.png";
+
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { signOut } from "../../../slices/user/userSlice";

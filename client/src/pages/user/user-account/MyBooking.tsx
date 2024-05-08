@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { BASE_URL } from "../../../config";
 import { useAppSelector } from "../../../app/hooks";
 import { useDispatch } from "react-redux";
@@ -59,7 +59,7 @@ const MyBooking = () => {
     }
   };
 
-  const { token, currentUser } = useAppSelector((data) => data.user);
+  const { token } = useAppSelector((data) => data.user);
 
   const dispatch = useDispatch();
   const authToken = {
@@ -78,7 +78,7 @@ const MyBooking = () => {
           authToken
         )
         .then((res: any) => {
-          const { data, message } = res.data;
+          const { data } = res.data;
           console.log("data-", data);
 
           dispatch(fetchDoctorListSuccess(data));

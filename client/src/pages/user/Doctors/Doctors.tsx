@@ -1,5 +1,5 @@
 import DoctorCard from "../../../components/doctor/DoctorCard";
-import { doctors } from "../../../assets/doctors";
+
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import { BASE_URL } from "../../../config";
 import {
@@ -75,7 +75,7 @@ const Doctors = () => {
           authToken
         )
         .then((res: any) => {
-          const { data, message } = res?.data;
+          const { data } = res?.data;
           console.log(res.data);
           //let result = data.map((item: any) => item._doc);
           console.log("dat-", data);

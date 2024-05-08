@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { FaUserPlus } from "react-icons/fa6"
 
 import 
-{ BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } 
+{ BarChart, Bar,  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } 
 from 'recharts';
 import { BASE_URL } from "../../config";
 import { Failed, Start, Success } from "../../slices/admin/dashboardSlice";

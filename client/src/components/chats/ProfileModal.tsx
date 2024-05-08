@@ -1,12 +1,6 @@
 import { ViewIcon } from '@chakra-ui/icons';
 import { useDisclosure,IconButton, Modal, ModalOverlay, ModalContent, ModalHeader, ModalCloseButton, ModalBody, ModalFooter, Button, Image } from '@chakra-ui/react'
-import React from 'react'
-import { useAppSelector } from '../../app/hooks';
 
-
-type PropsType = {
-
-}
 
 const ProfileModal = ({user,children}:any) => {
   

@@ -4,10 +4,10 @@ import uploadImageCloudinary from "../../utilis/uploadCloudinary";
 import addImage from "../../assets/images/add-2935429_640.webp";
 import axios from "axios";
 import { BASE_URL } from "../../config";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
-import { fetchPrescriptionFailed, fetchPrescriptionStart, fetchPrescriptionSuccess } from "../../slices/prescription";
+import {  useAppSelector } from "../../app/hooks";
+
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+//import { useNavigate } from "react-router-dom";
  type Prescription = {
   symptoms: string;
   disease: string;
@@ -25,11 +25,9 @@ type PropsType = {
   userId:string
 }
 
-type ImageType = {
-  img: string;
-}[];
+
 const AddPrescription = ({userId}:PropsType) => {
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
  // const [selectedFile, setSelectedFile] = useState<ImageType>([{img:""}]);
   const [formData, setFormData] = useState<Prescription>({
     symptoms: "",
@@ -180,7 +178,7 @@ const AddPrescription = ({userId}:PropsType) => {
 
     await axios.post(`${BASE_URL}/prescription/${userId}`,{formData},authToken)
     .then((res)=>{
-      const {data,message} = res.data;
+      const {message} = res.data;
      // dispatch(fetchPrescriptionSuccess(data));
       toast.success(message);
      

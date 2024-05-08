@@ -1,5 +1,5 @@
-import React from 'react'
-import { useAppSelector } from '../../../app/hooks'
+
+
 import { Avatar, Box,Text } from '@chakra-ui/react'
 
 type PropsType = {
@@ -13,7 +13,7 @@ type PropsType = {
 
 const UserListItem = ({user,handleFunction}:PropsType) => {
  
-    const {currentUser} = useAppSelector(state=>state.user);
+   // const {currentUser} = useAppSelector(state=>state.user);
   return (
     <Box
     onClick={handleFunction}

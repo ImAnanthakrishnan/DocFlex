@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { createContext, useContext, useState } from "react";
+
 
 const ChatContext = createContext<any | null>(null);
 

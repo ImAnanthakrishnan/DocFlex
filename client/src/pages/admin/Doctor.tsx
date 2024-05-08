@@ -65,7 +65,7 @@ const Doctors = () => {
   };
 
   const [reloadData, setReloadData] = useState<boolean>(false);
-
+      console.log(setReloadData);
   let navigate = useNavigate();
 
   const authToken = {
@@ -83,8 +83,8 @@ const Doctors = () => {
           authToken
         )
         .then((res: any) => {
-          const { data, message } = res?.data;
-          let result = data.map((item: any) => item._doc);
+          const { data } = res?.data;
+          //let result = data.map((item: any) => item._doc);
 
           dispatch(fetchDoctorListSuccess(data));
         })
@@ -124,8 +124,8 @@ const Doctors = () => {
           authToken
         )
         .then((res: any) => {
-          const { data, message } = res?.data;
-          let result = data.map((item: any) => item._doc);
+          const { data,  } = res?.data;
+          //let result = data.map((item: any) => item._doc);
 
           dispatch(fetchDoctorListSuccess(data));
         })
@@ -151,7 +151,7 @@ const Doctors = () => {
 
   const closeDropdown = () => setOpenDropdownId(null);
 
-  const statusChange = async (status: string, doctorId: number | string) => {
+  /*const statusChange = async (status: string, doctorId: number | string) => {
     closeDropdown();
 
     await axios
@@ -170,7 +170,7 @@ const Doctors = () => {
 
         toast.error(message);
       });
-  };
+  };*/
 
   const [blockStatus, setBlockStatus] = useState<{ [key: string]: boolean }>(
     {}

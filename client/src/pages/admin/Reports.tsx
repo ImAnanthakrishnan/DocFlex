@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import  { useEffect, useState, useRef } from "react";
 import { AiTwotoneLeftCircle, AiTwotoneRightCircle } from "react-icons/ai";
 import Loader from "../../components/Loader";
-import { BsThreeDots } from "react-icons/bs";
+
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { fetchAppointmentFailed, fetchAppointmentStart, fetchAppointmentSuccess } from "../../slices/doctor/appointmentSlice";
 import { BASE_URL } from "../../config";
@@ -11,7 +11,7 @@ import { removeData } from "../../slices/prescription";
 import Error from "../../components/Error";
 import {useReactToPrint} from 'react-to-print'
 import { FaFilePdf } from "react-icons/fa6";
-import { background } from "@chakra-ui/react";
+
 
 const Reports = () => {
 

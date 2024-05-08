@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import {
-  AiOutlineDelete,
+
   AiTwotoneLeftCircle,
   AiTwotoneRightCircle,
 } from "react-icons/ai";
@@ -13,7 +13,7 @@ import { useAppDispatch, useAppSelector } from "../../app/hooks";
 
 import axios from "axios";
 import { BASE_URL } from "../../config";
-import { toast } from "react-toastify";
+
 import {
   fetchPrescriptionFailed,
   fetchPrescriptionStart,
@@ -94,7 +94,7 @@ const ViewPrescriptions = ({ userId, user, doctorId, download }: PropsType) => {
             authToken
           )
           .then((res) => {
-            const { message, data } = res.data;
+            const {  data } = res.data;
             dispatch(fetchPrescriptionSuccess(data));
           })
           .catch((err) => {
@@ -105,7 +105,7 @@ const ViewPrescriptions = ({ userId, user, doctorId, download }: PropsType) => {
       fetchPrescription();
     }, [debounceQuery, userId]);
   } else if (user == "patient") {
-    const { token, currentUser } = useAppSelector((data) => data.user);
+    const { token } = useAppSelector((data) => data.user);
 
     const authToken = {
       headers: {
@@ -122,7 +122,7 @@ const ViewPrescriptions = ({ userId, user, doctorId, download }: PropsType) => {
             authToken
           )
           .then((res) => {
-            const { message, data } = res.data;
+            const {  data } = res.data;
             dispatch(fetchPrescriptionSuccess(data));
           })
           .catch((err) => {

@@ -3,7 +3,7 @@ import signupImg from "../../assets/images/signup.gif";
 //import avatar from "../../assets/images/profile.png";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ZodType, z } from "zod";
+import {  z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 

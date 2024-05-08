@@ -1,5 +1,5 @@
 
-import { Link, useParams } from "react-router-dom";
+import { Link,  } from "react-router-dom";
 
 const CheckoutSuccess = () => {
     let query = new URLSearchParams(window.location.search);

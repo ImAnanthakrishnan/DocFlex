@@ -1,28 +1,28 @@
 import {
-    Box,
+    /*Box,
     Button,
     ButtonGroup,
     Flex,
     HStack,
     IconButton,
-    Input,
+    Input,*/
     SkeletonText,
-    Text,
+    //Text,
   } from '@chakra-ui/react'
-  import { FaLocationArrow, FaTimes } from 'react-icons/fa'
+  //import { FaLocationArrow, FaTimes } from 'react-icons/fa'
   
   import {
     useJsApiLoader,//checks map loaded or not
-    GoogleMap,
+   /* GoogleMap,
     Marker,
     Autocomplete,
-    DirectionsRenderer,
+    DirectionsRenderer,*/
   } from '@react-google-maps/api'
   import { useRef, useState } from 'react'
   
   const APP_GOOGLE_MAPS_API_KEY = import.meta.env.VITE_APP_GOOGLE_MAPS_API_KEY;
 
-  const center = { lat: 48.8584, lng: 2.2945 }
+  //const center = { lat: 48.8584, lng: 2.2945 }
   
   function Maps() {
     const { isLoaded } = useJsApiLoader({
@@ -30,11 +30,11 @@ import {
       libraries: ['places'],
     });
   
-    const [map, setMap] = useState<google.maps.Map | null>(null);
+    //const [map, setMap] = useState<google.maps.Map | null>(null);
     const [directionsResponse, setDirectionsResponse] = useState<google.maps.DirectionsResult | null>(null);
     const [distance, setDistance] = useState<string>('');
     const [duration, setDuration] = useState<string>('');
-  
+     console.log(directionsResponse,distance,duration)
     const originRef = useRef<HTMLInputElement>(null);
     const destinationRef = useRef<HTMLInputElement>(null);
   
@@ -59,7 +59,7 @@ import {
         setDistance(results.routes[0].legs[0].distance?.text || '');
         setDuration(results.routes[0].legs[0].duration?.text || '');
       }
-    }
+    }  calculateRoute()
   
     function clearRoute() {
       setDirectionsResponse(null);
@@ -68,6 +68,7 @@ import {
       if (originRef.current) originRef.current.value = '';
       if (destinationRef.current) destinationRef.current.value = '';
     }
+    clearRoute()
   
     return (
 <iframe

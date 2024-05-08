@@ -1,6 +1,6 @@
 import { Box,Button,MenuButton,Text,Tooltip,Menu,MenuList, Avatar, MenuItem, Drawer, useDisclosure, DrawerOverlay, DrawerHeader, DrawerContent, DrawerBody, Input,useToast, Spinner } from '@chakra-ui/react';
-import React, { useState } from 'react'
-import { BiChevronDown } from 'react-icons/bi';
+import  { useState } from 'react'
+
 import { FaSearchengin } from 'react-icons/fa6';
 import { IoMdNotifications } from "react-icons/io";
 import {ChevronDownIcon} from '@chakra-ui/icons'
@@ -24,7 +24,7 @@ const SideDrawer = () => {
     const [loading,setLoading] = useState(false);
     const [loadingChat,setLoadingChat] = useState<boolean>(false);
 
-    const {setSelectedChat,chats,setChats,selectedChat} = ChatState();
+    const {setSelectedChat,chats,setChats} = ChatState();
 
     const toast = useToast
     let token1 = token ? token : docToken;
