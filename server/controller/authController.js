@@ -46,7 +46,8 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 
-const twilioClient = new twilio(accountSid, authToken);
+
+//const twilioClient = new twilio(accountSid, authToken);
 
 export const register = asyncHandler(async (req, res) => {
   const { formData, selectedFile } = req.body;
@@ -114,9 +115,31 @@ function message(res, data) {
   }
 }
 
+const sendEmail = asyncHandler(async (otp,email) => {
+  try {
+    const mailOptions = {
+      from: process.env.AUTH_EMAIL,
+      to: email,
+      subject:"Verify Your Email",
+      html : `<p>Enter ${otp} in the app to verify your email address and complete sign in</p>`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log("Email has been sent : ", info.response);
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
 export const sendOtp = asyncHandler(async (req, res) => {
   try {
-    const { phone, countryCode } = req.body;
+    const { phone, countryCode ,email} = req.body;
+   
     const concatenatedNumber = countryCode + phone;
     console.log(concatenatedNumber);
     const otp = otpGenerator.generate(6, {
@@ -132,16 +155,17 @@ export const sendOtp = asyncHandler(async (req, res) => {
       { otp, expiration: cDate.getTime() },
       { upsert: true, new: true, seDefaultsOnInsert: true }
     );
-
-    await twilioClient.messages.create({
+    /*await twilioClient.messages.create({
       body: `Your OTP is: ${otp}`,
       to: concatenatedNumber,
       from: process.env.TWILIO_PHONE_NUMBER,
-    });
+    });*/
+    
+   await sendEmail(otp,email)
 
     return res.status(200).json({
       success: true,
-      message: "OTP sent Successfully! ",
+      message: "OTP sent Successfully in the mail ",
     });
   } catch (error) {
     return res.status(400).json({
@@ -153,7 +177,7 @@ export const sendOtp = asyncHandler(async (req, res) => {
 
 export const verifyOtp = asyncHandler(async (req, res) => {
   try {
-    const { otp, phone } = req.body;
+    const { otp, phone,email } = req.body;
 
     const otpData = await Otp.findOne({
       phoneNumber: phone,

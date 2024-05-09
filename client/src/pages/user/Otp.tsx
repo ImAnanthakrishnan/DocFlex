@@ -50,9 +50,11 @@ if((currentAdmin && !location.pathname.startsWith('/doctor')) || (currentAdmin &
 
   const dispatch = useAppDispatch();
 
-  const {phone} = useAppSelector((data)=>data.phone);
+  const {details} = useAppSelector((data)=>data.phone);
+const email = details?.email;
+const phone = details?.phone;
 
-  if(!phone){
+  if(!details){
      navigate(-1);
   }
 
@@ -63,7 +65,7 @@ if((currentAdmin && !location.pathname.startsWith('/doctor')) || (currentAdmin &
     validate,
     onSubmit: async(values) => {
     const otp = values.otp.join("");
-   axios.post(`${BASE_URL}/auth/verify-otp`, {otp , phone})
+   axios.post(`${BASE_URL}/auth/verify-otp`, {otp , phone,email})
     .then((res) => {
       const { message } = res.data;
      
@@ -103,7 +105,7 @@ if((currentAdmin && !location.pathname.startsWith('/doctor')) || (currentAdmin &
 
   const handleResend = async() => {
     if (typeof phone === 'string') {
-    await axios.post(`${BASE_URL}/auth/send-otp`, {countryCode:phone.substring(0, 3),phone:phone.substring(3)})
+    await axios.post(`${BASE_URL}/auth/send-otp`, {countryCode:phone.substring(0, 3),phone:phone.substring(3),email})
     .then(res=>{
       toast.success(res.data.message)
     })

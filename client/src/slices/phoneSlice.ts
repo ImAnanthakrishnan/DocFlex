@@ -1,23 +1,26 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-
+type data = {
+    phone:string | '' | number;
+    email:string | '';
+}
 type InitialState = {
-    phone:string | '' | number
+    details:data | null
 }
 
 const initialState : InitialState = {
-    phone:''
+    details : null
 }
 
 const PhoneSlice = createSlice({
     name:'phone',
     initialState,
     reducers:{
-        phoneSuccess:(state,action:PayloadAction<string | number>) => {
-            state.phone = action.payload
+        phoneSuccess:(state,action:PayloadAction<data>) => {
+            state.details = action.payload
         },
         phoneComplete:(state) => {
-            state.phone = ''
+            state.details = null
         }
     }
 });

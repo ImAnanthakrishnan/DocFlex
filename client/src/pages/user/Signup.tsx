@@ -137,7 +137,12 @@ const Signup = () => {
       // Make the registration request
       const registrationResponse = await axios.post(`${BASE_URL}/auth/register`, postData);
       const phone = formData.countryCode ? formData.countryCode + formData.phone : formData.phone;
-     dispatch(phoneSuccess(phone));
+      const data = {
+        phone:phone,
+        email:formData.email
+      }
+     dispatch(phoneSuccess(data));
+     
       const { message } = registrationResponse.data;
       setLoading(false);
       toast.success(message);

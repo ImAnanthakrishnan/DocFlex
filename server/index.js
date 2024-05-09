@@ -12,8 +12,6 @@ import path,{dirname} from 'path';
 import { fileURLToPath } from 'url';
 import { errorHandler, notFound } from './middleware/errorMiddleware.js';
 
-
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -35,8 +33,27 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 
-app.use(express.static(path.join(__dirname,'public')));
+// Define the path to the client build directory
+/*const __dir1 = path.dirname('');
+const buildPath = path.join(__dir1, '../client/dist');
 
+// Serve static files from the client build directory
+app.use(express.static(buildPath));
+
+
+
+// Route for serving the index.html file
+app.get('/*', function(req, res) {
+    res.sendFile(
+        'index.html',
+        { root: path.join(__dir1, '../client/dist') },
+        function(err) {
+            if (err) {
+                res.status(500).send(err);
+            }
+        }
+    );
+});*/
 
 mongoose.connect(process.env.MONGO_URL, {
 })
@@ -65,6 +82,9 @@ import jitsiEmailRoute from './routes/jitsiEmail.js';
 import emailRoute from './routes/email.js';
 import chatRoute from './routes/chatRoute.js';
 import messageRoute from './routes/messageRoute.js';
+
+
+
 
 app.use('/api/v1/auth' , authRoute);
 app.use('/api/v1/doctors',doctorRoute);
