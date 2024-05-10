@@ -32,6 +32,7 @@ app.use(cors(corsOption));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname,'public')));
 
 // Define the path to the client build directory
 /*const __dir1 = path.dirname('');
