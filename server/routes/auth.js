@@ -40,7 +40,7 @@ router.post('/',async function (req, res, next) {
 
  const user = req.query.user;
     
-    res.header("Access-Control-Allow-Origin", "http://localhost:5173");
+    res.header("Access-Control-Allow-Origin", `${process.env.CLIENT_SITE_URL}`);
     res.header("Referrer-Policy", "no-referrer-when-downgrade");
   
     let redirectUrl = null

@@ -40,11 +40,11 @@ router.get("/google", async function (req, res, next) {
         console.error('Error saving user:', saveError);
       }
     }
-    res.redirect(`http://localhost:5173/login?email=${data.email}`);
+    res.redirect(`${process.env.CLIENT_SITE_URL}/login?email=${data.email}`);
 
   } catch (err) {
     console.log(err)
-    res.redirect(`http://localhost:5173/login`);
+    res.redirect(`${process.env.CLIENT_SITE_URL}/login`);
   }
 });
 
@@ -83,7 +83,7 @@ router.get("/google1", async function (req, res, next) {
         console.error('Error saving user:', saveError);
       }
     }
-    res.redirect(`http://localhost:5173/doctor/login?email=${data.email}`);
+    res.redirect(`${process.env.CLIENT_SITE_URL}/doctor/login?email=${data.email}`);
 
   } catch (err) {
     console.log(err)

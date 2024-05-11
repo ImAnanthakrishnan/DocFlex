@@ -351,7 +351,7 @@ const sendResetPassword = asyncHandler(async (name, email, token , user) => {
       from: process.env.AUTH_EMAIL,
       to: email,
       subject: "For reset Password",
-      html: `<p>Hi ${name}, click <a href="http://localhost:5173/reset?token=${token}&user=${user}">here</a> to reset your password</p>`,
+      html: `<p>Hi ${name}, click <a href="${process.env.CLIENT_SITE_URL}/reset?token=${token}&user=${user}">here</a> to reset your password</p>`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
