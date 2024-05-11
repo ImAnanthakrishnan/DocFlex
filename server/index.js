@@ -114,7 +114,7 @@ const appServer = app.listen( PORT, () => console.log(`Server listening on port 
 const io = new Server(appServer,{
     pingTimeout:60000,
     cors:{
-        origin:"http://localhost:5173"
+        origin:`${process.env.CLIENT_SITE_URL}`
     }
 })
 
