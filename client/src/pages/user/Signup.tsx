@@ -164,7 +164,7 @@ function navigateUrl(url:string){
 }
 
   async function auth(){
-    const response = await fetch(`${BASE_URL}/auth`,
+    const response = await fetch(`${BASE_URL}/auth?status=${'register'}`,
       {method:'post'}
     );
     const data = await response.json();

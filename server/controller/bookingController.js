@@ -5,6 +5,9 @@ import Stripe from "stripe";
 import asyncHandler from "express-async-handler";
 import { transporter } from "./authController.js";
 
+
+let booking,savedBookings;
+
 export const sendEmailBookingDetails = asyncHandler(async (name, email,bookingNumber,date) => {
   try {
     const mailOptions = {
@@ -120,7 +123,7 @@ console.log('curr-',currentDay.length);
     });
 
     //create new booking
-    const booking = new Booking({
+     booking = new Booking({
       doctor: doctor._id,
       user: user._id,
       ticketPrice: doctor.ticketPrice,
@@ -135,9 +138,8 @@ console.log('curr-',currentDay.length);
       modeOfAppointment,
     });
 
-    let savedBookings = await booking.save();
+    //let savedBookings = await booking.save();
 
-  
 
     if (savedBookings) {
 
@@ -158,6 +160,29 @@ console.log('curr-',currentDay.length);
       .json({ success: false, message: "Error creating checkout session" });
   }
 });
+
+
+export const webhookStripe = asyncHandler(async(req,res) => {
+
+  const sigHeader = req.headers['stripe-signature'];
+  const webhookSecret = process.env.STRIPE_SECRET_KEY;
+
+  let event;
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+  try {
+    event = stripe.webhooks.constructEvent(req.rawBody, sigHeader, webhookSecret);
+  } catch (err) {
+    console.error('Webhook signature verification failed.', err);
+    return res.status(400).send('Webhook Error: Invalid signature.');
+  }
+  //webhook event
+  if (event.type === 'payment_intent.succeeded') {
+
+   savedBookings = await booking.save();
+  }
+
+});
+
 
 export const cancelBooking = asyncHandler(async (req, res) => {
   const { bookingId } = req.query;

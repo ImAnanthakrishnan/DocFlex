@@ -39,6 +39,8 @@ router.get("/google", async function (req, res, next) {
       } catch (saveError) {
         console.error('Error saving user:', saveError);
       }
+    }else{
+     return res.status(400).json({message:'You are already registered'});
     }
     res.redirect(`${process.env.CLIENT_SITE_URL}/login?email=${data.email}`);
 
@@ -82,14 +84,78 @@ router.get("/google1", async function (req, res, next) {
       } catch (saveError) {
         console.error('Error saving user:', saveError);
       }
+    }else{
+     return res.status(400).json({message:'You are already registered'});
     }
     res.redirect(`${process.env.CLIENT_SITE_URL}/doctor/login?email=${data.email}`);
 
   } catch (err) {
     console.log(err)
-    res
-      .status(400)
-      .json({ success: false, message: "Error with signing in Google " });
+    res.redirect(`${process.env.CLIENT_SITE_URL}doctor/login`);
+  }
+});
+
+router.get('/googleLogin',async(req,res) => {
+  const code = req.query.code;
+  try{
+    const redirectUrl = "http://localhost:8000/auth/googleLogin";
+    const oAuth2Client = new OAuth2Client(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      redirectUrl
+    );
+    const result = await oAuth2Client.getToken(code);
+    await oAuth2Client.setCredentials(result.tokens);
+    
+    const user = oAuth2Client.credentials;
+   
+    let data = await getUserData(user.access_token);
+   
+   
+   let newUser = await User.findOne({ email: data.email });
+
+    if(!newUser){
+      return res.status(400).json({message:'Please register'});
+    }
+
+    res.redirect(`${process.env.CLIENT_SITE_URL}/login?email=${data.email}`);
+
+  }
+  catch(err){
+    console.log(err)
+    res.redirect(`${process.env.CLIENT_SITE_URL}/login`);
+  }
+});
+
+router.get('/googleLogin1',async(req,res) => {
+  const code = req.query.code;
+  try{
+    const redirectUrl = "http://localhost:8000/auth/googleLogin1";
+    const oAuth2Client = new OAuth2Client(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      redirectUrl
+    );
+    const result = await oAuth2Client.getToken(code);
+    await oAuth2Client.setCredentials(result.tokens);
+    
+    const user = oAuth2Client.credentials;
+   
+    let data = await getUserData(user.access_token);
+   
+   
+   let newUser = await Doctor.findOne({ email: data.email });
+
+    if(!newUser){
+      return res.status(400).json({message:'Please register'});
+    }
+
+    res.redirect(`${process.env.CLIENT_SITE_URL}/doctor/login?email=${data.email}`);
+
+  }
+  catch(err){
+    console.log(err)
+    res.redirect(`${process.env.CLIENT_SITE_URL}doctor/login`);
   }
 });
 

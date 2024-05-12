@@ -20,7 +20,10 @@ import {
 } from "../controller/authController.js";
 
 import { OAuth2Client } from "google-auth-library";
-import { checkBlockedDoctor, checkBlockedPatient } from "../middleware/block_ublock.js";
+import {
+  checkBlockedDoctor,
+  checkBlockedPatient,
+} from "../middleware/block_ublock.js";
 
 const router = express.Router();
 
@@ -30,48 +33,56 @@ router.post("/send-otp", sendOtp);
 
 router.post("/verify-otp", verifyOtp);
 
-router.post("/login", checkBlockedPatient , userLogin);
+router.post("/login", checkBlockedPatient, userLogin);
 
-router.post("/doctor-login", checkBlockedDoctor , doctorLogin);
+router.post("/doctor-login", checkBlockedDoctor, doctorLogin);
 
 router.post("/admin-login", adminLogin);
 
-router.post('/',async function (req, res, next) {
+router.post("/", async function (req, res, next) {
+  const user = req.query.user;
+  const status = req.query.status;
 
- const user = req.query.user;
-    
-    res.header("Access-Control-Allow-Origin", `${process.env.CLIENT_SITE_URL}`);
-    res.header("Referrer-Policy", "no-referrer-when-downgrade");
-  
-    let redirectUrl = null
+  res.header("Access-Control-Allow-Origin", `${process.env.CLIENT_SITE_URL}`);
+  res.header("Referrer-Policy", "no-referrer-when-downgrade");
 
-    if(user === 'doctor'){
-      redirectUrl = `http://localhost:8000/auth/google1`
-    }else{
-       redirectUrl = `http://localhost:8000/auth/google`;
+  let redirectUrl = null;
+
+  if (status === "register") {
+    if (user === "doctor") {
+      redirectUrl = `http://localhost:8000/auth/google1`;
+    } else {
+      redirectUrl = `http://localhost:8000/auth/google`;
     }
-    
+  } else if (status === "login") {
+    if (user === "doctor") {
+      redirectUrl = `http://localhost:8000/auth/googleLogin1`;
+    } else {
+      redirectUrl = `http://localhost:8000/auth/googleLogin`;
+    }
+  }
 
-    const oAuth2Client = new OAuth2Client(
-      process.env.GOOGLE_CLIENT_ID,
-      process.env.GOOGLE_CLIENT_SECRET,
-      redirectUrl
-    );
+  const oAuth2Client = new OAuth2Client(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    redirectUrl
+  );
 
-    const authorizeUrl = oAuth2Client.generateAuthUrl({
-      access_type: "offline",
-      scope: "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email  openid",
-      prompt: "consent",
-    });
-    
-    res.status(200).json({ url: authorizeUrl });
-  })
+  const authorizeUrl = oAuth2Client.generateAuthUrl({
+    access_type: "offline",
+    scope:
+      "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email  openid",
+    prompt: "consent",
+  });
 
- router.get('/getUser',googleAuthUser);
+  res.status(200).json({ url: authorizeUrl });
+});
 
- router.post('/forgot-verify',forgotVerify);
- router.post('/resetPassword' , resetPassword);
+router.get("/getUser", googleAuthUser);
 
- router.get('/blocked/:user/:userId',authenticate,blockedUser);
+router.post("/forgot-verify", forgotVerify);
+router.post("/resetPassword", resetPassword);
+
+router.get("/blocked/:user/:userId", authenticate, blockedUser);
 
 export default router;

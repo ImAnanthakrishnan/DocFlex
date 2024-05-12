@@ -131,7 +131,7 @@ const Login = () => {
   }
 
   async function auth(){
-    const response = await fetch(`${BASE_URL}/auth`,
+    const response = await fetch(`${BASE_URL}/auth?status=${'login'}`,
       {method:'post'}
     );
     const data = await response.json();

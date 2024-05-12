@@ -145,7 +145,7 @@ const Signup = () => {
   }
 
   async function auth(){
-    const response = await fetch(`${BASE_URL}/auth?user=${'doctor'}`,
+    const response = await fetch(`${BASE_URL}/auth?user=${'doctor'}&status=${'register'}`,
       {method:'post'}
     );
     const data = await response.json();
