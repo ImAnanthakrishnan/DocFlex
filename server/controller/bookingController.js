@@ -6,7 +6,7 @@ import asyncHandler from "express-async-handler";
 import { transporter } from "./authController.js";
 
 
-let booking,savedBookings;
+//let booking,savedBookings;
 
 export const sendEmailBookingDetails = asyncHandler(async (name, email,bookingNumber,date) => {
   try {
@@ -123,7 +123,7 @@ console.log('curr-',currentDay.length);
     });
 
     //create new booking
-     booking = new Booking({
+    let booking = new Booking({
       doctor: doctor._id,
       user: user._id,
       ticketPrice: doctor.ticketPrice,
@@ -138,7 +138,7 @@ console.log('curr-',currentDay.length);
       modeOfAppointment,
     });
 
-    //let savedBookings = await booking.save();
+    let savedBookings = await booking.save();
 
 
     if (savedBookings) {
@@ -178,7 +178,7 @@ export const webhookStripe = asyncHandler(async(req,res) => {
   //webhook event
   if (event.type === 'payment_intent.succeeded') {
 
-   savedBookings = await booking.save();
+  // savedBookings = await booking.save();
   }
 
 });
