@@ -39,10 +39,11 @@ router.get("/google", async function (req, res, next) {
       } catch (saveError) {
         console.error('Error saving user:', saveError);
       }
-    }else{
-    return res.redirect(`${process.env.CLIENT_SITE_URL}/login?message=${'You are already registered,please login'}`);
+     return res.redirect(`${process.env.CLIENT_SITE_URL}/login?email=${data.email}`);
     }
-    res.redirect(`${process.env.CLIENT_SITE_URL}/login?email=${data.email}`);
+    return res.redirect(`${process.env.CLIENT_SITE_URL}/login?message=${'You are already registered,please login'}`);
+    
+    
 
   } catch (err) {
     console.log(err)
