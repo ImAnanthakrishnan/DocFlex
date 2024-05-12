@@ -7,6 +7,7 @@ import {
 } from "../../slices/doctor/doctorSlice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import axios from "axios";
+import googleImg from "../../assets/images/btn_google_signin_dark_pressed_web.png";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
 import { ZodType, z } from "zod";
@@ -135,6 +136,20 @@ const Login = () => {
       });
   };
 
+  function navigateUrl(url:string){
+    window.location.href = url
+  }
+
+  async function auth(){
+    const response = await fetch(`${BASE_URL}/auth?status=${'login'}`,
+      {method:'post'}
+    );
+    const data = await response.json();
+    
+    navigateUrl(data.url);
+
+  }
+
 
   return (
     <section className="px-5 lg:px-0" style={{ backgroundImage: `url(${backgroundImage})`, height:'100vh' }}>
@@ -193,6 +208,12 @@ const Login = () => {
               {loading ? <HashLoader size={35} color="#ffffff" /> : "Login"}
             </button>
           </div>
+          <p className="text-center text-headingColor mt-2">or</p>
+            <div className="flex justify-center">
+            <button className="mt-3" type="button" onClick={() => auth()}>
+                  <img  src={googleImg} alt="google sign in" />
+            </button>
+            </div>
           <p className="mt-5 text-textColor text-center">
             Don&apos;t have an account?{" "}
             <Link

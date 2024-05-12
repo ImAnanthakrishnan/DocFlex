@@ -95,7 +95,7 @@ router.get("/google1", async function (req, res, next) {
 
   } catch (err) {
     console.log(err)
-    res.redirect(`${process.env.CLIENT_SITE_URL}doctor/login`);
+    res.redirect(`${process.env.CLIENT_SITE_URL}/doctor/login`);
   }
 });
 
@@ -160,7 +160,7 @@ router.get('/googleLogin1',async(req,res) => {
   }
   catch(err){
     console.log(err)
-    res.redirect(`${process.env.CLIENT_SITE_URL}doctor/login`);
+    res.redirect(`${process.env.CLIENT_SITE_URL}/doctor/login`);
   }
 });
 
