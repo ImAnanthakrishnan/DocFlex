@@ -40,6 +40,7 @@ const Login = () => {
     const message = new URLSearchParams(window.location.search).get("message");
     //dispatch(signInStart());
     if(message){
+      navigate('/login')
       toast.error(message);
     }
     if (email) {

@@ -35,7 +35,12 @@ const Login = () => {
   useEffect(() => {
     
     const email = new URLSearchParams(window.location.search).get("email");
+     const message = new URLSearchParams(window.location.search).get('message');
 
+     if(message){
+      navigate('/doctor/login')
+      toast.error(message);
+     }
     //dispatch(signInStart());
     if (email) {
       setGoogle(true);

@@ -22,10 +22,13 @@ router.get("/google", async function (req, res, next) {
     console.log("credentials", user);
     let data = await getUserData(user.access_token);
     console.log(data);
-    let newUser = null;
-    newUser = await User.findOne({ email: data.email });
+
+   let newUser = await User.findOne({ email: data.email });
   
-    if (newUser === null) {
+   if(!newUser){
+    return res.redirect(`${process.env.CLIENT_SITE_URL}/login?message=${'You are already registered,please login'}`)
+   }
+    
       newUser = new User({
         name: data.name,
         email: data.email,
@@ -39,10 +42,7 @@ router.get("/google", async function (req, res, next) {
       } catch (saveError) {
         console.error('Error saving user:', saveError);
       }
-     return res.redirect(`${process.env.CLIENT_SITE_URL}/login?email=${data.email}`);
-    }
-    return res.redirect(`${process.env.CLIENT_SITE_URL}/login?message=${'You are already registered,please login'}`);
-    
+     return res.redirect(`${process.env.CLIENT_SITE_URL}/login?email=${data.email}`);    
     
 
   } catch (err) {
@@ -68,10 +68,14 @@ router.get("/google1", async function (req, res, next) {
     console.log("credentials", user);
     let data = await getUserData(user.access_token);
     console.log(data);
-    let newUser = null;
-    newUser = await Doctor.findOne({ email: data.email });
+   
+   let newUser = await Doctor.findOne({ email: data.email });
   
-    if (newUser === null) {
+   if(!newUser){
+    return res.redirect(`${process.env.CLIENT_SITE_URL}/doctor/login?message=${'You are already registered,please login'}`)
+   }
+
+ 
       newUser = new Doctor({
         name: data.name,
         email: data.email,
@@ -85,10 +89,9 @@ router.get("/google1", async function (req, res, next) {
       } catch (saveError) {
         console.error('Error saving user:', saveError);
       }
-    }else{
-     return res.status(400).json({message:'You are already registered'});
-    }
-    res.redirect(`${process.env.CLIENT_SITE_URL}/doctor/login?email=${data.email}`);
+      res.redirect(`${process.env.CLIENT_SITE_URL}/doctor/login?email=${data.email}`);
+    
+   
 
   } catch (err) {
     console.log(err)
@@ -116,7 +119,8 @@ router.get('/googleLogin',async(req,res) => {
    let newUser = await User.findOne({ email: data.email });
 
     if(!newUser){
-      return res.redirect(`${process.env.CLIENT_SITE_URL}/login?message=${'You are already registered,please login'}`);
+      return res.redirect(`${process.env.CLIENT_SITE_URL}/login?message=${'You are not registered'}`);
+
     }
 
     res.redirect(`${process.env.CLIENT_SITE_URL}/login?email=${data.email}`);
@@ -148,7 +152,7 @@ router.get('/googleLogin1',async(req,res) => {
    let newUser = await Doctor.findOne({ email: data.email });
 
     if(!newUser){
-      return res.status(400).json({message:'Please register'});
+      return res.redirect(`${process.env.CLIENT_SITE_URL}/doctor/login?message=${'You are not registered'}`);
     }
 
     res.redirect(`${process.env.CLIENT_SITE_URL}/doctor/login?email=${data.email}`);
