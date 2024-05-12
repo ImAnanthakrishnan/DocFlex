@@ -37,8 +37,11 @@ const Login = () => {
   useEffect(() => {
     
     const email = new URLSearchParams(window.location.search).get("email");
-
+    const message = new URLSearchParams(window.location.search).get("message");
     //dispatch(signInStart());
+    if(message){
+      toast.error(message);
+    }
     if (email) {
       setGoogle(true);
       const fetchUserData = async () => {

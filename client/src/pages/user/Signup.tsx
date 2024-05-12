@@ -168,7 +168,7 @@ function navigateUrl(url:string){
       {method:'post'}
     );
     const data = await response.json();
-    
+
     navigateUrl(data.url);
 
   }

@@ -9,7 +9,7 @@ router.get("/google", async function (req, res, next) {
   const code = req.query.code;
   console.log(code);
   try {
-    const redirectUrl = "http://localhost:8000/auth/google";
+    const redirectUrl = `${process.env.SERVER_URL}/auth/google`;
     const oAuth2Client = new OAuth2Client(
       process.env.GOOGLE_CLIENT_ID,
       process.env.GOOGLE_CLIENT_SECRET,
@@ -40,7 +40,7 @@ router.get("/google", async function (req, res, next) {
         console.error('Error saving user:', saveError);
       }
     }else{
-     return res.status(400).json({message:'You are already registered'});
+    return res.redirect(`${process.env.CLIENT_SITE_URL}/login?message=${'You are already registered,please login'}`);
     }
     res.redirect(`${process.env.CLIENT_SITE_URL}/login?email=${data.email}`);
 
@@ -54,7 +54,7 @@ router.get("/google1", async function (req, res, next) {
   const code = req.query.code;
   console.log(code);
   try {
-    const redirectUrl = "http://localhost:8000/auth/google1";
+    const redirectUrl = `${process.env.SERVER_URL}/auth/google1`;
     const oAuth2Client = new OAuth2Client(
       process.env.GOOGLE_CLIENT_ID,
       process.env.GOOGLE_CLIENT_SECRET,
@@ -98,7 +98,7 @@ router.get("/google1", async function (req, res, next) {
 router.get('/googleLogin',async(req,res) => {
   const code = req.query.code;
   try{
-    const redirectUrl = "http://localhost:8000/auth/googleLogin";
+    const redirectUrl = `${process.env.SERVER_URL}/auth/googleLogin`;
     const oAuth2Client = new OAuth2Client(
       process.env.GOOGLE_CLIENT_ID,
       process.env.GOOGLE_CLIENT_SECRET,
@@ -115,7 +115,7 @@ router.get('/googleLogin',async(req,res) => {
    let newUser = await User.findOne({ email: data.email });
 
     if(!newUser){
-      return res.status(400).json({message:'Please register'});
+      return res.redirect(`${process.env.CLIENT_SITE_URL}/login?message=${'You are already registered,please login'}`);
     }
 
     res.redirect(`${process.env.CLIENT_SITE_URL}/login?email=${data.email}`);
@@ -130,7 +130,7 @@ router.get('/googleLogin',async(req,res) => {
 router.get('/googleLogin1',async(req,res) => {
   const code = req.query.code;
   try{
-    const redirectUrl = "http://localhost:8000/auth/googleLogin1";
+    const redirectUrl = `${process.env.SERVER_URL}/auth/googleLogin1`;
     const oAuth2Client = new OAuth2Client(
       process.env.GOOGLE_CLIENT_ID,
       process.env.GOOGLE_CLIENT_SECRET,

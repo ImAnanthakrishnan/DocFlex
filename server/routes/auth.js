@@ -50,15 +50,15 @@ router.post("/", async function (req, res, next) {
 
   if (status === "register") {
     if (user === "doctor") {
-      redirectUrl = `http://localhost:8000/auth/google1`;
+      redirectUrl = `${process.env.SERVER_URL}/auth/google1`;
     } else {
-      redirectUrl = `http://localhost:8000/auth/google`;
+      redirectUrl = `${process.env.SERVER_URL}/auth/google`;
     }
   } else if (status === "login") {
     if (user === "doctor") {
-      redirectUrl = `http://localhost:8000/auth/googleLogin1`;
+      redirectUrl = `${process.env.SERVER_URL}/auth/googleLogin1`;
     } else {
-      redirectUrl = `http://localhost:8000/auth/googleLogin`;
+      redirectUrl = `${process.env.SERVER_URL}/auth/googleLogin`;
     }
   }
 
