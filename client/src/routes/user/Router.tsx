@@ -15,6 +15,7 @@ import EmailCheck from '../../components/EmailCheck';
 import ForgotVerify from '../../components/ForgotVerify';
 import ChatPage from '../../pages/ChatPage';
 import Maps from '../../pages/user/Maps';
+import Page404 from '../../pages/404';
 const Routers = () => {
   return (
     <div>
@@ -36,6 +37,7 @@ const Routers = () => {
         </Route>
         <Route path='/forgotVerify' element={<EmailCheck />} />
         <Route path='/reset' element={<ForgotVerify />} />
+        <Route path='*' element={<Page404 />} />
       </Routes>
     </div>
   )
