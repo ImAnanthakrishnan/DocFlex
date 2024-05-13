@@ -1,4 +1,4 @@
-* {
+/** {
     margin: 0;
     padding: 0;
     -webkit-text-size-adjust: none;
@@ -15,7 +15,7 @@
     background: #181828;
     font-size: 14px;
     line-height: 1;
-  }
+  }*/
   
   label {
     cursor: pointer;
