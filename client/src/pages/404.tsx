@@ -1,9 +1,7 @@
-
-import { useNavigate } from 'react-router-dom'
 import './style.css';
 
 const Page404 = () => {
-    const navigate = useNavigate();
+   
   return (
     <div>
     <header className="top-header">
@@ -37,7 +35,7 @@ const Page404 = () => {
           <p className="message__text text-secondary">We're sorry, the page you were looking for isn't found here. The link you followed may either be broken or no longer exists. Please try again, or take a look at our.</p>
         </div>
         <div className="m-4">
-          <button onClick={() => navigate('https://codepen.io/uiswarup/full/yLzypyY')} className="border border-warning px-5 py-2 text-warning">GO BACK</button>
+          {/*<button onClick={() => navigate('https://codepen.io/uiswarup/full/yLzypyY')} className="border border-warning px-5 py-2 text-warning">GO BACK</button>*/}
         </div>
       </div>
       {/* END Content */}
