@@ -84,7 +84,7 @@ const Home = () => {
 
             <div className="flex gap-[30px] justify-end">
               <div>
-                <img className="w-full" src={doctorImg} alt="" />
+                <img className="w-full rounded-md" src={doctorImg} alt="" />
               </div>
               <div className="mt-[30px]">
                 <img className="w-full mb-[30px]" src={heroImage02} alt="" />
