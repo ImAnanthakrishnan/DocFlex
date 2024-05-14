@@ -8,27 +8,30 @@ import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import axios from "axios";
 import { BASE_URL } from "../../../config";
 import { MdMessage } from "react-icons/md";
-const navLinks = [
-  {
-    path: "/home",
-    display: "Home",
-  },
-  {
-    path: "/find-doctors",
-    display: "Find a Doctor",
-  },
-  {
-    path: "/services",
-    display: "Services",
-  },
-  {
-    path: "/contact",
-    display: "Contact",
-  },
-];
+
+
 
 const Header = () => {
   const { currentUser, token } = useAppSelector((data) => data.user);
+
+  const navLinks = [
+    {
+      path: currentUser ? "/home" : "/",
+      display: "Home",
+    },
+    {
+      path: "/find-doctors",
+      display: "Find a Doctor",
+    },
+    {
+      path: "/services",
+      display: "Services",
+    },
+    {
+      path: "/contact",
+      display: "Contact",
+    },
+  ];
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -77,7 +80,7 @@ const Header = () => {
           }
         })
         .catch((err) => {
-          console.log(err.response.data.message);
+          console.log(err?.response.data.message);
         });
     };
     blocked();
