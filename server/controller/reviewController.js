@@ -6,7 +6,7 @@ import asyncHandler from "express-async-handler";
 //get all non-authenticated reviews
 export const getAllNonAuthReviews = asyncHandler(async(req,res) => {
   try{
-   let reviews = await Review.aggregate([{$limit:6},{$sort:{_id:-1}}]);
+   let reviews = await Review.find().limit(6).sort({_id:-1});
    res
    .status(200)
    .json({ success: true, message: "Successfull", data: reviews });
