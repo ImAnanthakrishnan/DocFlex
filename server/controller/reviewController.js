@@ -6,8 +6,13 @@ import asyncHandler from "express-async-handler";
 //get all reviews
 export const getAllReviews = asyncHandler(async (req, res) => {
   try {
-  
-    const reviews = await Review.find({doctor:req.params.doctorId});
+    let reviews;
+
+    if(req.params.doctorId){
+         reviews = await Review.find({doctor:req.params.doctorId});
+    } else {
+         reviews = await Review.aggregate([{$limit:6},{$sort:{_id:-1}}]);
+    }   
     
     res
       .status(200)
