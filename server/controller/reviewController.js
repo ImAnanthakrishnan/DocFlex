@@ -3,16 +3,23 @@ import Doctor from "../models/doctorModel.js";
 
 import asyncHandler from "express-async-handler";
 
+//get all non-authenticated reviews
+export const getAllNonAuthReviews = asyncHandler(async(req,res) => {
+  try{
+   let reviews = await Review.aggregate([{$limit:6},{$sort:{_id:-1}}]);
+   res
+   .status(200)
+   .json({ success: true, message: "Successfull", data: reviews });
+  }
+  catch(err){
+    console.log('reviewsError-',err);
+  }
+});
+
 //get all reviews
 export const getAllReviews = asyncHandler(async (req, res) => {
   try {
-    let reviews;
-
-    if(req.params.doctorId){
-         reviews = await Review.find({doctor:req.params.doctorId});
-    } else {
-         reviews = await Review.aggregate([{$limit:6},{$sort:{_id:-1}}]);
-    }   
+        let reviews = await Review.find({doctor:req.params.doctorId});
     
     res
       .status(200)
