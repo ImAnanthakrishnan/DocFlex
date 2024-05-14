@@ -17,20 +17,20 @@ import axios from "axios";
 const Testimonal = () => {
 
     const dispatch = useAppDispatch();
-    const { token } = useAppSelector((state) => state.user);
+   // const { token } = useAppSelector((state) => state.user);
 
-    const authToken = {
+    /*const authToken = {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      };
+      };*/
 
     useEffect(() => {
         const fetchReviews = async () => {
             dispatch(fetchReviewStart());
       
             await axios
-              .get(`${BASE_URL}/doctors/reviews`, authToken)
+              .get(`${BASE_URL}/doctors/`)
               .then((res: any) => {
                 
                 dispatch(fetchReviewSuccess(res.data.data));
