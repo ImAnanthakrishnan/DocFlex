@@ -14,7 +14,7 @@ import Loader from "../../../components/Loader";
 import Error from "../../../components/Error";
 const DoctorDetails = () => {
   const { id } = useParams();
-
+  
   const dispatch = useAppDispatch();
 
   const { token } = useAppSelector((data) => data.user);
