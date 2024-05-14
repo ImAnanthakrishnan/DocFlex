@@ -30,7 +30,7 @@ const Testimonal = () => {
             dispatch(fetchReviewStart());
       
             await axios
-              .get(`${BASE_URL}/reviews/`)
+              .get(`${BASE_URL}/reviews`)
               .then((res: any) => {
                 
                 dispatch(fetchReviewSuccess(res.data.data));
