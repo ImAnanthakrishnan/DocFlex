@@ -47,7 +47,7 @@ const Testimonal = () => {
     const { reviewList } = useAppSelector(
         (state) => state.reviewList
       );
-    console.log('review-',reviewList)
+    console.log('review1-',reviewList)
   return (
     <div className="mt-[30px] lg:mt-[55px]">
       <Swiper
