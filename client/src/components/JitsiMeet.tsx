@@ -5,6 +5,7 @@ import { useAppSelector } from "../app/hooks";
 import axios from "axios";
 import { BASE_URL } from "../config";
 import { toast } from "react-toastify";
+import {  useNavigate } from "react-router-dom";
 
 /*const SERVICE_ID = import.meta.env.VITE_SERVICE_ID
 const TEMPLATE_ID = import.meta.env.VITE_TEMPLATE_ID;
@@ -48,11 +49,11 @@ const JitsiMeet = () => {
     }
   };
  
- 
+  let navigate = useNavigate();
   const sendEmail = async () => {
     const link = `https://${domain}/${roomName}`;
    
-
+     
     await axios.post(`${BASE_URL}/email/`,{
       email,name,link
     },authToken)
@@ -107,6 +108,7 @@ const JitsiMeet = () => {
         getIFrameRef={(iframeRef) => {
           iframeRef.style.height = "700px";
         }}
+        onReadyToClose={()=>navigate('/doctor/home')}
       />
     </div>
   );
