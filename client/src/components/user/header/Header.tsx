@@ -65,7 +65,7 @@ const Header = () => {
 
     return () => window.removeEventListener("scroll", handleStickyHeader);
   });
-if(currentUser){
+
 
   useEffect(() => {
     const blocked = async () => {
@@ -86,7 +86,7 @@ if(currentUser){
     };
     blocked();
   }, []);
-}
+
 
   if (status) {
     dispatch(signOut());
