@@ -8,7 +8,7 @@ import icon03 from "../../assets/images/icon03.png";
 import { Link, Navigate, useLocation,} from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa6";
 import {  useAppSelector } from "../../app/hooks";
-import Testimonal from "../../components/user/Testimonal";
+//import Testimonal from "../../components/user/Testimonal";
 
 
 
@@ -180,7 +180,7 @@ const Home = () => {
               expert health care.
             </p>
           </div>
-          <Testimonal />
+         {/* <Testimonal />*/} 
         </div>
        </section>
     </>
