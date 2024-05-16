@@ -72,6 +72,7 @@ const phone = details?.phone;
       toast.success(message);
       dispatch(phoneComplete());
       navigate("/login");
+      toast.success('Please login');
     })
     .catch((err) => {
       const { message } = err.response.data;

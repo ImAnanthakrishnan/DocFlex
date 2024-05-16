@@ -172,7 +172,7 @@ const SidePanel = ({
               name="appointmentMode"
               value="offline"
               onChange={() => setSelectedMode("offline")}
-              defaultChecked
+              //defaultChecked
             />
             <span className="text-[15px] leading-6 text-textColor font-semibold">
               Offline

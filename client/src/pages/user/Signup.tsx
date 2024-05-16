@@ -155,6 +155,16 @@ const Signup = () => {
     } catch (error:any) {
       const errorMessage = error.response?.data?.message || 'Something went wrong';
       toast.error(errorMessage);
+      if(errorMessage === "Please verify your email"){
+        const result = confirm("Please verify your email");
+
+        if(result == true){
+          await sendOtp();
+          navigate("/otp");
+        } else{
+          console.log("Action canceled.");
+        }
+      }
       setLoading(false);
     }
   };

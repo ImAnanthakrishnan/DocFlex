@@ -40,7 +40,7 @@ const ViewPrescriptions = ({ userId, user, doctorId, download }: PropsType) => {
   console.log("p-", prescription);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const itemsPerPage: number = 2;
+  const itemsPerPage: number = 1;
 
   // Calculate index of first and last item for current page
   const indexOfLastPrescription = currentPage * itemsPerPage;

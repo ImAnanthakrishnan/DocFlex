@@ -25,6 +25,7 @@ import {
 } from "../../slices/prescription";
 
 import { useNavigate } from "react-router-dom";
+import convertTime from "../../utilis/convertTime";
 
 const Appointments = () => {
   const { token } = useAppSelector((data) => data.doctor);
@@ -235,11 +236,12 @@ const Appointments = () => {
       return toast.error("please add the time");
     }
 
+     let TimeChange = convertTime(timeChange);
     await axios
       .post(
         `${BASE_URL}/email1`,
         {
-          timeChange,
+         timeChange: TimeChange,
           email,
           name,
         },

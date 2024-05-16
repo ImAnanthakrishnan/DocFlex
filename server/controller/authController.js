@@ -65,16 +65,28 @@ export const register = asyncHandler(async (req, res) => {
     });
 
   //check user exist
-  if (user) {
+  if (user && user.is_verified == true) {
     return res
       .status(400)
       .json({ success: false, message: "User already exist" });
   }
 
-  if (doctor) {
+  if(user && user.is_verified == false){
+    return res
+    .status(400)
+    .json({ success: false, message: "Please verify your email" });
+  }
+
+  if (doctor && doctor.is_verified == true) {
     return res
       .status(400)
       .json({ success: false, message: "Doctor already exist" });
+  }
+
+  if(doctor && doctor.is_verified == false){
+    return res
+    .status(400)
+    .json({ success: false, message: "Please verify your email" });
   }
 
   //hash password

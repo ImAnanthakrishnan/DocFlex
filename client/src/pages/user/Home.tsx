@@ -5,7 +5,7 @@ import heroImage03 from "../../assets/images/hero-img03.png";
 import icon01 from "../../assets/images/icon01.png";
 import icon02 from "../../assets/images/icon02.png";
 import icon03 from "../../assets/images/icon03.png";
-import { Link, Navigate, useLocation,} from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate,} from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa6";
 import {  useAppSelector } from "../../app/hooks";
 //import Testimonal from "../../components/user/Testimonal";
@@ -16,7 +16,7 @@ const Home = () => {
 
   const location = useLocation();
 
- // let navigate = useNavigate();
+  let navigate = useNavigate();
   const {currentUser} = useAppSelector(state => state.user);
   if(currentUser && location.pathname === '/' ){
     return <Navigate to="/home" />
@@ -51,7 +51,7 @@ const Home = () => {
                   moment. Through our comprehensive healthcare services, we
                   strive to extend longevity while ensuring quality of life.
                 </p>
-                <button className="btn">Request an Appointment</button>
+                <button className="btn" onClick={()=>navigate('/find-doctors')}>Request an Appointment</button>
               </div>
 
               {/* ===== hero counter ===== */}
@@ -122,7 +122,7 @@ const Home = () => {
                   World-class care for everyone. Our health System offers 
                   unmatched, expert health care. From the lab to the clinic.
                 </p>
-                <Link to='/doctors' className="w-[44px] h-[44px] rounded-full border border-solid border-[#181A1E] mt-30px mx-auto flex item-center justify-center group hover:bg-primaryColor hover:border-none">
+                <Link to='/find-doctors' className="w-[44px] h-[44px] rounded-full border border-solid border-[#181A1E] mt-30px mx-auto flex item-center justify-center group hover:bg-primaryColor hover:border-none">
                   <FaArrowRight className="group-hover:text-white w-6 h-6 mt-2"/>
                 </Link>
               </div>
@@ -141,7 +141,7 @@ const Home = () => {
                   World-class care for everyone. Our health System offers 
                   unmatched, expert health care. From the lab to the clinic.
                 </p>
-                <Link to='/doctors' className="w-[44px] h-[44px] rounded-full border border-solid border-[#181A1E] mt-30px mx-auto flex item-center justify-center group hover:bg-primaryColor hover:border-none">
+                <Link to='/find-doctors' className="w-[44px] h-[44px] rounded-full border border-solid border-[#181A1E] mt-30px mx-auto flex item-center justify-center group hover:bg-primaryColor hover:border-none">
                   <FaArrowRight className="group-hover:text-white w-6 h-6 mt-2"/>
                 </Link>
               </div>
@@ -160,7 +160,7 @@ const Home = () => {
                   World-class care for everyone. Our health System offers 
                   unmatched, expert health care. From the lab to the clinic.
                 </p>
-                <Link to='/doctors' className="w-[44px] h-[44px] rounded-full border border-solid border-[#181A1E] mt-30px mx-auto flex item-center justify-center group hover:bg-primaryColor hover:border-none">
+                <Link to='/find-doctors' className="w-[44px] h-[44px] rounded-full border border-solid border-[#181A1E] mt-30px mx-auto flex item-center justify-center group hover:bg-primaryColor hover:border-none">
                   <FaArrowRight className="group-hover:text-white w-6 h-6 mt-2"/>
                 </Link>
               </div>
