@@ -60,7 +60,7 @@ const ForgotVerify = () => {
       toast.success(res.data.message);
       localStorage.removeItem('userIdForgot');
       setLoading(false);
-      if(user === 'paitent'){
+      if(user === 'patient'){
         navigate('/login');
       }else{
         navigate('/doctor/login');
