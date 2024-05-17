@@ -7,7 +7,7 @@ import {
 } from "../../slices/doctor/doctorSlice";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import axios from "axios";
-import googleImg from "../../assets/images/btn_google_signin_dark_pressed_web.png";
+//import googleImg from "../../assets/images/btn_google_signin_dark_pressed_web.png";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
 import { ZodType, z } from "zod";
@@ -136,7 +136,7 @@ const Login = () => {
       });
   };
 
-  function navigateUrl(url:string){
+  /*function navigateUrl(url:string){
     window.location.href = url
   }
 
@@ -148,7 +148,7 @@ const Login = () => {
     
     navigateUrl(data.url);
 
-  }
+  }*/
 
 
   return (
@@ -208,12 +208,12 @@ const Login = () => {
               {loading ? <HashLoader size={35} color="#ffffff" /> : "Login"}
             </button>
           </div>
-          <p className="text-center text-headingColor mt-2">or</p>
+         {/* <p className="text-center text-headingColor mt-2">or</p>
             <div className="flex justify-center">
             <button className="mt-3" type="button" onClick={() => auth()}>
                   <img  src={googleImg} alt="google sign in" />
             </button>
-            </div>
+            </div>*/}
           <p className="mt-5 text-textColor text-center">
             Don&apos;t have an account?{" "}
             <Link

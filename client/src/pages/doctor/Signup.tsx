@@ -6,7 +6,7 @@ import axios from "axios";
 import { ZodType, z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import googleImg from "../../assets/images/btn_google_signin_dark_pressed_web.png";
+//import googleImg from "../../assets/images/btn_google_signin_dark_pressed_web.png";
 import uploadImageCloudinary from "../../utilis/uploadCloudinary";
 import { BASE_URL } from "../../config";
 import { toast } from "react-toastify";
@@ -140,7 +140,7 @@ const Signup = () => {
     }
   };
 
-  function navigateUrl(url:string){
+  /*function navigateUrl(url:string){
     window.location.href = url
   }
 
@@ -152,7 +152,7 @@ const Signup = () => {
     
     navigateUrl(data.url);
 
-  }
+  }*/
 
   return (
     <section className="px-5 xl:px-0">
@@ -291,12 +291,12 @@ const Signup = () => {
                   {loading ? <HashLoader size={35} color="fffff" /> : "Sign Up"}
                 </button>
               </div>
-              <p className="text-center text-headingColor mt-2">or</p>
+             {/* <p className="text-center text-headingColor mt-2">or</p>
               <div className="flex justify-center">
                 <button className="mt-3" type="button" onClick={() => auth()}>
                   <img src={googleImg} alt="google sign in" />
                 </button>
-              </div>
+              </div>*/}
               <p className="mt-5 text-textColor text-center">
                 Already have an account?{" "}
                 <Link
