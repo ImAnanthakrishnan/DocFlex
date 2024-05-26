@@ -1,6 +1,6 @@
-import  { useEffect } from "react";
+import  { useEffect, useState } from "react";
 
-import { AiFillStar } from "react-icons/ai";
+import { AiFillStar, AiTwotoneLeftCircle, AiTwotoneRightCircle } from "react-icons/ai";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks";
 import {
   fetchReviewFailed,
@@ -54,6 +54,32 @@ const Feedback = ({ reviews, totalRating, doctorId }: PropsType) => {
     (state) => state.reviewList
   );
 
+  const [currentPage,setCurrentPage] = useState<number>(1);
+
+  const itemsPerPage:number = 5;
+   
+  const indexOfLastReview = currentPage * itemsPerPage;
+  const indexOfFirstReview = indexOfLastReview - itemsPerPage;
+
+  const currentReviews = reviewList.slice(
+    indexOfFirstReview,
+    indexOfLastReview
+  );
+
+  const totalPages = Math.ceil(reviewList.length / itemsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   return (
     <div>
       {loading && !error && <Loader/>}
@@ -62,7 +88,7 @@ const Feedback = ({ reviews, totalRating, doctorId }: PropsType) => {
         <h4 className="text-[20px] leading-[30px] font-bold text-headingColor mb-[30px]">
           All reviews ({totalRating})
         </h4>
-        {reviewList?.map((review, index) => (
+        {currentReviews?.map((review, index) => (
           <div key={index} className="flex justify-between gap-10 mb-[30px]">
             <div className="flex gap-3">
               <figure className="w-10 h-10 rounded-full">
@@ -95,6 +121,22 @@ const Feedback = ({ reviews, totalRating, doctorId }: PropsType) => {
             </div>
           </div>
         ))}
+        {/* Pagination buttons */}
+        <div className="flex justify-center mt-10">
+          <button
+            className="bg-gray-200 px-3 py-1 rounded-l hover:bg-gray-300"
+            onClick={handlePrevPage}
+          >
+            <AiTwotoneLeftCircle size={25} />
+          </button>
+         <p className="text-2xl">{currentPage} / {totalPages}</p> 
+          <button
+            className="bg-gray-200 px-3 py-1 rounded-r hover:bg-gray-300"
+            onClick={handleNextPage}
+          >
+            <AiTwotoneRightCircle size={25} />
+          </button>
+        </div>
       </div>
       }
     </div>
