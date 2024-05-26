@@ -1,6 +1,6 @@
-import React, { useCallback, useState,useRef, useEffect } from "react";
+import React, { useCallback, useState,useRef } from "react";
 import { useReactToPrint } from "react-to-print";
-import { toast } from "react-toastify";
+
 
 type PropsType = {
   showModal: boolean;
