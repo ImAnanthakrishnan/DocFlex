@@ -16,7 +16,6 @@ import AddPrescription from "../../components/doctor/AddPrescription";
 import ViewPrescriptions from "../../components/doctor/ViewPrescriptions";
 import { FcVideoCall } from "react-icons/fc";
 
-
 import {
   fetchPrescriptionFailed,
   fetchPrescriptionStart,
@@ -35,7 +34,6 @@ const Appointments = () => {
   const [debounceQuery, setDebounceQuery] = useState<string | "">("");
   const handleSearch = () => {
     setQuery(query.trim());
-    
   };
 
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -44,11 +42,10 @@ const Appointments = () => {
   const [userId, setUserId] = useState<string>("");
   const [name, setName] = useState<string | "">("");
   const [email, setEmail] = useState<string | "">("");
-  const [status,setStatus] = useState<string | ''>('');
+  const [status, setStatus] = useState<string | "">("");
   const openModal = (user: string) => {
     setShowModal(true);
     setUserId(user);
-   
   };
 
   const openScheduleModel = async (name: string, email: string) => {
@@ -65,9 +62,7 @@ const Appointments = () => {
     setShowModal(false);
   };*/
 
-  const { appointments } = useAppSelector(
-    (state) => state.appointment
-  );
+  const { appointments } = useAppSelector((state) => state.appointment);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -117,7 +112,7 @@ const Appointments = () => {
           authToken
         )
         .then((res) => {
-          const {  data } = res.data;
+          const { data } = res.data;
           dispatch(fetchPrescriptionSuccess(data));
         })
         .catch((err) => {
@@ -137,7 +132,7 @@ const Appointments = () => {
           authToken
         )
         .then((res: any) => {
-          console.log('res-',res.data.data);
+          console.log("res-", res.data.data);
           dispatch(fetchAppointmentSuccess(res.data.data));
         })
         .catch((err) => {
@@ -177,7 +172,7 @@ const Appointments = () => {
           }
         );
         const { data } = res?.data;
-        console.log('datpa-'+data)
+        console.log("datpa-" + data);
 
         dispatch(fetchAppointmentSuccess(data));
       } catch (err: any) {
@@ -220,14 +215,25 @@ const Appointments = () => {
   }, [status]);
 
   const [add, setAdd] = useState<boolean>(false);
+  const [edit,setEdit] = useState<boolean>(false);
+  const [data,setData] = useState<any>({});
 
   const handleModalAction = (action: string) => {
     if (action === "add") {
       setAdd(true);
+      setData("");
     } else if (action === "view") {
       setAdd(false);
+      setEdit(false);
+    } else if(action === "edit") {
+      setEdit(true);
     }
   };
+ 
+  const handleData = (datas:any) => {
+    setData(datas);
+  }
+
 
   const handleTimeSchedule = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -236,12 +242,12 @@ const Appointments = () => {
       return toast.error("please add the time");
     }
 
-     let TimeChange = convertTime(timeChange);
+    let TimeChange = convertTime(timeChange);
     await axios
       .post(
         `${BASE_URL}/email1`,
         {
-         timeChange: TimeChange,
+          timeChange: TimeChange,
           email,
           name,
         },
@@ -283,7 +289,11 @@ const Appointments = () => {
         <ul className="  flex  gap-2 mt-5 justify-center">
           <li>
             <label className="flex items-center space-x-2 cursor-pointer bg-gray-200 px-3 py-1 rounded-md">
-              <input type="radio" name="filter" onClick={() => setStatus('All')}  />
+              <input
+                type="radio"
+                name="filter"
+                onClick={() => setStatus("All")}
+              />
               <p className="text-[15px] leading-6 text-textColor font-semibold">
                 All
               </p>
@@ -291,7 +301,11 @@ const Appointments = () => {
           </li>
           <li>
             <label className="flex items-center space-x-2 cursor-pointer bg-gray-200 px-3 py-1 rounded-md">
-              <input type="radio" name="filter" onClick={() => setStatus('Upcoming')} />
+              <input
+                type="radio"
+                name="filter"
+                onClick={() => setStatus("Upcoming")}
+              />
               <p className="text-[15px] leading-6 text-textColor font-semibold">
                 Upcoming
               </p>
@@ -299,7 +313,11 @@ const Appointments = () => {
           </li>
           <li>
             <label className="flex items-center space-x-2 cursor-pointer bg-gray-200 px-3 py-1 rounded-md">
-              <input type="radio" name="filter" onClick={() => setStatus('Completed')} />
+              <input
+                type="radio"
+                name="filter"
+                onClick={() => setStatus("Completed")}
+              />
               <p className="text-[15px] leading-6 text-textColor font-semibold">
                 Completed
               </p>
@@ -307,7 +325,11 @@ const Appointments = () => {
           </li>
           <li>
             <label className="flex items-center space-x-2 cursor-pointer bg-gray-200 px-3 py-1 rounded-md">
-              <input type="radio" name="filter" onClick={() => setStatus('Cancelled')} />
+              <input
+                type="radio"
+                name="filter"
+                onClick={() => setStatus("Cancelled")}
+              />
               <p className="text-[15px] leading-6 text-textColor font-semibold">
                 Cancelled
               </p>
@@ -355,7 +377,7 @@ const Appointments = () => {
                   className="w-10 h-10 rounded-full"
                   alt=""
                 />
-                
+
                 <div className="pl-3">
                   <div className="text-base font-semibold">{item.name}</div>
                   <div className="text-normal text-gray-500">{item.email}</div>
@@ -426,7 +448,6 @@ const Appointments = () => {
                 />
               </td>
 
-
               {openModalSchedule && (
                 <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-50 flex justify-center items-center">
                   <div className="bg-white rounded-lg w-3/4 md:w-1/2 lg:w-1/3 p-4">
@@ -462,23 +483,31 @@ const Appointments = () => {
           ))}
         </tbody>
       </table>
-             {showModal && <FullScreenModal
-                showModal={showModal}
-                setShowModal={setShowModal}
-                doctor={true}
-                onActionClick={handleModalAction}
-              >
-                {/* Modal content */}
-                <h3 className="text-lg leading-6 font-medium text-gray-900">
-                  {add ? "Add pre" : "Patient Details"}
-                </h3>
-                {/* Add your modal content here */}
-                {add ? (
-                  <AddPrescription userId={userId} />
-                ) : (
-                  <ViewPrescriptions userId={userId} user={'admin'} />
-                )}
-              </FullScreenModal>}
+      {showModal && (
+        <FullScreenModal
+          showModal={showModal}
+          setShowModal={setShowModal}
+          doctor={true}
+          onActionClick={handleModalAction}
+        >
+          {/* Modal content */}
+          <h3 className="text-lg leading-6 font-medium text-gray-900">
+            {add
+              ? "Add prescription"
+              : edit
+              ? "Edit prescription"
+              : "Patient Details"}
+          </h3>
+          {/* Add your modal content here */}
+          {add ? (
+            <AddPrescription userId={userId} />
+          ) : edit ? (
+            <AddPrescription userId={userId} action={'edit'}  datas={data} />
+          ) : (
+            <ViewPrescriptions userId={userId} user={"admin"} onData={handleData} onActionClick={handleModalAction} />
+          )}
+        </FullScreenModal>
+      )}
       {/* Pagination buttons */}
       <div className="flex justify-center mt-10">
         <button
