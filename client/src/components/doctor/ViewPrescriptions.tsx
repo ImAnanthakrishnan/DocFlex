@@ -1,9 +1,5 @@
-import  { useEffect, useState } from "react";
-import {
-
-  AiTwotoneLeftCircle,
-  AiTwotoneRightCircle,
-} from "react-icons/ai";
+import { useCallback, useEffect, useState } from "react";
+import { AiTwotoneLeftCircle, AiTwotoneRightCircle } from "react-icons/ai";
 import { Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -28,16 +24,16 @@ type PropsType = {
   download?: any;
 };
 
-const ViewPrescriptions = ({ userId, user, doctorId, download }: PropsType) => {
-  console.log("use-", userId);
-  console.log("doctor-", doctorId);
+const ViewPrescriptions = ({ userId, user, doctorId, download,onActionClick,onData }: PropsType
+  & {onActionClick?:(action:string) => void,onData?:(datas: any) => void}
+) => {
   const [query, setQuery] = useState<string | "">("");
   const [debounceQuery, setDebounceQuery] = useState<string | "">("");
   const dispatch = useAppDispatch();
   const { prescription, loading, error } = useAppSelector(
     (state) => state.prescription
   );
-  console.log("p-", prescription);
+
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   const itemsPerPage: number = 1;
@@ -94,7 +90,7 @@ const ViewPrescriptions = ({ userId, user, doctorId, download }: PropsType) => {
             authToken
           )
           .then((res) => {
-            const {  data } = res.data;
+            const { data } = res.data;
             dispatch(fetchPrescriptionSuccess(data));
           })
           .catch((err) => {
@@ -114,7 +110,7 @@ const ViewPrescriptions = ({ userId, user, doctorId, download }: PropsType) => {
     };
 
     useEffect(() => {
-      const fetchPrescription = async () => {
+      const fetchPrescription = async() => {
         dispatch(fetchPrescriptionStart());
         await axios
           .get(
@@ -122,7 +118,7 @@ const ViewPrescriptions = ({ userId, user, doctorId, download }: PropsType) => {
             authToken
           )
           .then((res) => {
-            const {  data } = res.data;
+            const { data } = res.data;
             dispatch(fetchPrescriptionSuccess(data));
           })
           .catch((err) => {
@@ -133,6 +129,20 @@ const ViewPrescriptions = ({ userId, user, doctorId, download }: PropsType) => {
       fetchPrescription();
     }, [debounceQuery, userId]);
   }
+
+
+
+ const handleActionClick = useCallback((action:string) => {
+  if(onActionClick) {
+    onActionClick(action);
+  }
+ },[onActionClick]);
+
+ const handleData = useCallback((data:any)=>{
+   if(onData){
+    onData(data);
+   }
+ },[onData])
 
   return (
     <div>
@@ -149,7 +159,7 @@ const ViewPrescriptions = ({ userId, user, doctorId, download }: PropsType) => {
       </section>
       {loading && !error && <Loader />}
       {error && !loading && <Error errorMessage={error} />}
-      <div 
+      <div
         className="flex flex-wrap justify-evenly"
         ref={download}
         style={{ width: "100%" }}
@@ -210,6 +220,24 @@ const ViewPrescriptions = ({ userId, user, doctorId, download }: PropsType) => {
                   })}
                 </div>
               </div>
+
+              {user === "admin" && (
+                
+                  <button className="btn btn-rounded-sm bg-irisBlueColor text-center text-xl w-full hover:bg-transparent hover:text-purpleColor"
+                  onClick={() => {
+                    handleActionClick("edit");
+                    handleData({
+                      _id:item._id,
+                      testReports:item.testReports,
+                      symptoms:item.symptoms,
+                      disease:item.disease,
+                      medicines:item.medicines,
+                    })
+                  }}
+                  >
+                    Edit
+                  </button>
+              )}
             </div>
           ))}
       </div>

@@ -44,6 +44,34 @@ export const addPrescription = asyncHandler(async (req, res) => {
   }
 });
 
+export const editPrescription = asyncHandler(async(req,res) => {
+ 
+  const Id = req.params.id;
+
+  const {formData} = req.body;
+
+  const { symptoms, disease, medicines, testReport } = formData;
+
+  try{
+     let updatedData = await Prescription.findByIdAndUpdate(Id,{
+      symptoms,
+      disease,
+      medicines,
+      testReport
+     },{new:true});
+
+     res
+     .status(201)
+     .json({ message: "Prescription updated successfully", data: updatedData });
+
+  }
+  catch(err){
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+
+});
+
 export const getAllPrescription = asyncHandler(async (req, res) => {
   const { userId, doctorId,query } = req.query;
 

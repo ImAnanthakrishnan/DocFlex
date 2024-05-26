@@ -22,18 +22,26 @@ import { toast } from "react-toastify";
 };
 
 type PropsType = {
-  userId:string
+  userId:string;
+  action?:string;
+  datas?:any
 }
 
 
-const AddPrescription = ({userId}:PropsType) => {
+const AddPrescription = ({userId,action,datas}:PropsType) => {
   //const navigate = useNavigate();
  // const [selectedFile, setSelectedFile] = useState<ImageType>([{img:""}]);
   const [formData, setFormData] = useState<Prescription>({
-    symptoms: "",
-    disease: "",
-    medicines: [/*{ name: "", quantity: 0, time_gap: "" }*/],
-    testReport: [/*{ img: "" }*/],
+    symptoms: datas?.symptoms || "",
+    disease: datas?.disease || "",
+    medicines: datas?.medicines?.map((med:any)=>({
+      name:med.name,
+      quantity:med.quantity,
+      time_gap:med.time_gap
+    }))||[{name:"",quantity:"",time_gap:""}],
+    testReport: datas?.testReports?.map((item:any)=>({
+      img:item.img
+    })) || [{img:""}]
   });
 
 
@@ -189,17 +197,30 @@ const AddPrescription = ({userId}:PropsType) => {
     })
   }
 
-  
+  const editMedicalRecords = async(e:React.FormEvent<HTMLFormElement>) => {
+
+      e.preventDefault();
+
+      await axios.patch(`${BASE_URL}/prescription/${datas?._id}`,{formData},authToken)
+      .then((res) => {
+        const {message} = res.data;
+        toast.success(message);
+      })
+      .catch((err) => {
+        toast.error(err.response.message)
+      })
+
+  }
 
   return (
     <div>
-      <form action="" onSubmit={addMedicalRecords}>
+      <form action="" onSubmit={action ? editMedicalRecords : addMedicalRecords}>
         <div className="mb-5">
           <p className="from__label">Symptoms</p>
           <input
             type="text"
             name="symptoms"
-            //  value={formData.name}
+              value={formData.symptoms}
             onChange={handleInputChange}
             placeholder="symptoms"
             className="form__input"
@@ -211,7 +232,7 @@ const AddPrescription = ({userId}:PropsType) => {
           <input
             type="text"
             name="disease"
-            //  value={formData.email}
+              value={formData.disease}
             onChange={handleInputChange}
             placeholder="disease"
             className="form__input"
@@ -355,7 +376,7 @@ const AddPrescription = ({userId}:PropsType) => {
             type="submit"
             className="bg-primaryColor text-white text-[18px] leading-[30px] w-full py-3 px-4 rounded-lg"
           >
-            Add Record
+           { action ? "Edit Record" : "Add Record" }
           </button>
         </div>
       </form>

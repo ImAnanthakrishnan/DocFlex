@@ -1,4 +1,4 @@
-import React, { useCallback, useState,useRef } from "react";
+import React, { useCallback, useState,useRef, useEffect } from "react";
 import { useReactToPrint } from "react-to-print";
 import { toast } from "react-toastify";
 
@@ -17,7 +17,9 @@ const FullScreenModal = ({
   onActionClick,
   onActionRef
 }: PropsType & { onActionClick?: (action: string) => void , onActionRef?:(action:any)=>void }) => {
+
   const [downloadBtn, setDownloadBtn] = useState<boolean>(true);
+
   const handleActionClick = useCallback((action: string) => {
     if (onActionClick) {
       onActionClick(action);
@@ -32,13 +34,14 @@ const FullScreenModal = ({
     }
     
   },[onActionClick]);
-
+  
 
   const componentPdf = useRef<any>(0);
   const generatePdf = useReactToPrint({
     content: () => componentPdf.current,
     documentTitle: "PrescriptionData",
-    onAfterPrint: () => toast.success("Data saved in PDF"),
+
+   // onAfterPrint: () => toast.success("Data saved in PDF"),
   });
 
 

@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 type Prescription = {
+    _id:string;
     symptoms: string;
     disease: string;
     medicines: {
