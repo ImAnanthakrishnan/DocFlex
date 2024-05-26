@@ -6,7 +6,49 @@ import { all,completed,cancelled,upcoming } from "../helpers/appointmentStatus.j
 
 export const updateDoctor = asyncHandler(async (req, res) => {
   const id = req.params.id;
-  console.log('r-',req.body);
+  //console.log('r-',req.body);
+
+  const onlineData = req.body.onlineTimeSlots.map((items,index) => {
+    return items;
+  });
+
+  const offlineData = req.body.timeSlots.map((items,index) => {
+    return items;
+  });
+
+  //time conflicts checking
+
+  const conflicts = [];
+
+  onlineData.forEach(onlineSlot => {
+    offlineData.forEach(offlineSlot => {
+      if(onlineSlot.day === offlineSlot.day){
+        const onlineStartTime = new Date(`1970-01-01T${onlineSlot.startingTime}:00`);
+        const onlineEndTime = new Date(`1970-01-01T${onlineSlot.endingTime}:00`);
+        const offlineStartTime = new Date(`1970-01-01T${offlineSlot.startingTime}:00`);
+        const offlineEndTime = new Date(`1970-01-01T${offlineSlot.endingTime}:00`);
+
+        if(
+          (onlineStartTime <= offlineEndTime && onlineEndTime >= offlineStartTime) ||
+          (offlineStartTime <= onlineEndTime && offlineEndTime >= onlineStartTime)
+        ) 
+        {
+          conflicts.push({
+            onlineSlot,
+            offlineSlot,
+            message:'Conflict detected'
+          })
+        }
+
+      }
+    })
+  })
+
+  if(conflicts.length > 0){
+    return res.status(400).json({success:false,message:"There is a conflict detected in time"})
+  }
+  
+
   try {
     const updatedDoctor = await Doctor.findByIdAndUpdate(
       id,
